@@ -55,7 +55,7 @@ void __fastcall rescuebot_main ? (struct_rescuebot rescuebot_state_l)
                  rescuebot_state_struct->current_location_id_or_dropoff_point_l < DAT_00502afc))
             {
                 ExceptionList = &local_c;
-                FUN_004504c0(pvVar5);
+                check_level_complete_and_activate_exits(pvVar5);
                 puVar1 = FUN_00401290(local_80 + 7, "rescue\\RescueBot.cpp", 0x3c);
                 local_4 = 0;
                 FUN_004a3a19(puVar1 + 7, "RESCUEBOT: Victim dropped off");
@@ -97,7 +97,7 @@ void __fastcall rescuebot_main ? (struct_rescuebot rescuebot_state_l)
                     local_80[6] = 0x3fd99999;
                     uVar6 = FUN_004b9400();
                     split_max_victim_or_game_state = (int)uVar6;
-                    if (pvVar5->current_victim_count_l < split_max_victim_or_game_state)
+                    if (pvVar5->active_victim_count_l < split_max_victim_or_game_state)
                     {
                         find_assign_victim((int)rescuebot_state_struct);
                     }
