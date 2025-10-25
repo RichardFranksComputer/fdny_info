@@ -1,8 +1,10 @@
 # Console commands
 
 Commands were found via:
-    - `strings FDNYFIREFIGHTER.exe | grep -C 50 -i playsnd`
-    - decompiling .exe in Ghidra and searching `playsnd`
+
+- `strings FDNYFIREFIGHTER.exe | grep -C 50 -i playsnd`
+
+- decompiling .exe in Ghidra and searching `playsnd`
 
 # Supported Commands
 
