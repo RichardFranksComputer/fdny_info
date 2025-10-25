@@ -6,65 +6,105 @@ Commands were found via:
 
 # Supported Commands
 
+# Game Command Reference
+
 ## Game Control Commands
-* `help` - Display help
-* `quit` - Exit game
-* `debugvictims` - Debug victim entities
-* `runrescuebot` - Run rescue bot AI
+
+| Command | Parameters | Example | Status |
+|---------|------------|---------|--------|
+| `help` | 0 | `help` | ✅ Verified |
+| `quit` | 0 | `quit` | ✅ Verified |
+| `debugvictims` | 0 | `debugvictims` | ✅ Verified |
+| `runrescuebot` | 0 | `runrescuebot` | ✅ Verified |
 
 ## Conditional Commands
-* `if` - Conditional execution with 3 parameters
-* `ifnot` - Inverse conditional
-* `if<=`, `if<`, `if>=`, `if>` - Numeric comparisons
-* `iffacing` - Check facing direction
-* `ifnotfacing` - Inverse facing check
-* `ifclear` - Check if area is clear
-* `ifnotclear` - Inverse clear check
+
+| Command | Parameters | Example | Status |
+|---------|------------|---------|--------|
+| `if` | 3 | `if VictimsDead <value> <command>` | ✅ Variable verified, format confirmed |
+| `ifnot` | 3 | `ifnot <varname> <value> <command>` | ⚠️ Illustrative placeholder |
+| `if<=` | 3 | `if<= <varname> <value> <command>` | ⚠️ Illustrative placeholder |
+| `if<` | 3 | `if< <varname> <value> <command>` | ⚠️ Illustrative placeholder |
+| `if>=` | 3 | `if>= <varname> <value> <command>` | ⚠️ Illustrative placeholder |
+| `if>` | 3 | `if> <varname> <value> <command>` | ⚠️ Illustrative placeholder |
+| `iffacing` | 2 | `iffacing <direction> <command>` | ⚠️ Illustrative placeholder |
+| `ifnotfacing` | 2 | `ifnotfacing <direction> <command>` | ⚠️ Illustrative placeholder |
+| `ifclear` | 2 | `ifclear <location> <command>` | ⚠️ Illustrative placeholder |
+| `ifnotclear` | 2 | `ifnotclear <location> <command>` | ⚠️ Illustrative placeholder |
 
 ## Variable Management
-* `set` - Set variable value (2 parameters)
-* `inc` - Increment variable
-* `dec` - Decrement variable
-* `listvars` - List all variables
+
+| Command | Parameters | Example | Status |
+|---------|------------|---------|--------|
+| `set` | 2 | `set BlahblahVar 42` | ✅ Variable verified from binary |
+| `inc` | 1 | `inc blahCount` | ✅ Variable verified from binary |
+| `dec` | 1 | `dec <varname>` | ⚠️ Illustrative placeholder |
+| `listvars` | 0 | `listvars` | ✅ Verified |
 
 ## Execution Commands
-* `exec` - Execute script
-* `execsetsonly` - Execute only set commands
-* `once` - Execute once
+
+| Command | Parameters | Example | Status |
+|---------|------------|---------|--------|
+| `exec` | 1 | `exec blah.cfg` | ✅ File verified from binary |
+| `execsetsonly` | 1 | `execsetsonly <scriptname>` | ⚠️ Illustrative placeholder |
+| `once` | 1 | `once <command>` | ⚠️ Illustrative placeholder |
 
 ## Communication
-* `action` - Perform action (2 parameters)
-* `tell` - Send message (2 parameters)
-* `sendmsg` - Send message (2 parameters)
-* `print` - Print message
-* `hint` - Display hint
+
+| Command | Parameters | Example | Status |
+|---------|------------|---------|--------|
+| `action` | 2 | `action <entity> <actionname>` | ⚠️ Illustrative placeholder |
+| `tell` | 2 | `tell <target> <message>` | ⚠️ Illustrative placeholder |
+| `sendmsg` | 2 | `sendmsg <target> <message>` | ⚠️ Illustrative placeholder |
+| `print` | 1 | `print "Testing new line"` | ✅ Verified from binary |
+| `hint` | 1 | `hint You must rescue` | ✅ Verified from binary |
 
 ## Audio Commands
-* `playsnd` - Play sound
-* `playsndat` - Play sound at location (2 parameters)
-* `stopsnd` - Stop sound
-* `loopsnd` - Loop sound
-* `loopsndat` - Loop sound at location (2 parameters)
-* `loopsndatloc` - Loop sound at specific location (4 parameters)
-* `ambientsnd` - Ambient sound (4 parameters)
-* `testloopsnd` - Test looping sound
-* `testambientsnd` - Test ambient sound
+
+| Command | Parameters | Example | Status |
+|---------|------------|---------|--------|
+| `playsnd` | 1 | `playsnd res_music01.wav` | ✅ Sound file verified from binary |
+| `playsndat` | 2 | `playsndat <soundname> <location>` | ⚠️ Illustrative placeholder |
+| `stopsnd` | 1 | `stopsnd <soundname>` | ⚠️ Illustrative placeholder |
+| `loopsnd` | 1 | `loopsnd <soundname>` | ⚠️ Illustrative placeholder |
+| `loopsndat` | 2 | `loopsndat <soundname> <location>` | ⚠️ Illustrative placeholder |
+| `loopsndatloc` | 4 | `loopsndatloc <sound> <x> <y> <z>` | ⚠️ Illustrative placeholder |
+| `ambientsnd` | 4 | `ambientsnd <sound> <x> <y> <z>` | ⚠️ Illustrative placeholder |
+| `testloopsnd` | 1 | `testloopsnd <soundname>` | ⚠️ Illustrative placeholder |
+| `testambientsnd` | 1 | `testambientsnd <soundname>` | ⚠️ Illustrative placeholder |
 
 ## Visual Effects
-* `fogenable` - Enable fog (5 parameters: likely RGBA + distance)
-* `fogdisable` - Disable fog
-* `quake` - Screen shake effect (2 parameters: intensity + duration)
+
+| Command | Parameters | Example | Status |
+|---------|------------|---------|--------|
+| `fogenable` | 5 | `fogenable <r> <g> <b> <density> <distance>` | ⚠️ Format verified, no example found |
+| `fogdisable` | 0 | `fogdisable` | ✅ Verified |
+| `quake` | 2 | `quake <intensity> <duration>` | ⚠️ Format verified, no example found |
 
 ## Map/Level Management
-* `listmaps` - List available maps
-* `loadmap` - Load specific map
-* `loadhosemap` - Load HOS (possibly "House of Sorrow" or similar) map
-* `setlighttable` - Set lighting table (2 parameters)
-* `difficulty` - Set difficulty level
+
+| Command | Parameters | Example | Status |
+|---------|------------|---------|--------|
+| `listmaps` | 0 | `listmaps` | ✅ Verified |
+| `loadmap` | 1 | `loadmap <mapname>` | ⚠️ Illustrative placeholder |
+| `loadhosemap` | 1 | `loadhosemap <mapname>` | ⚠️ Illustrative placeholder |
+| `setlighttable` | 2 | `setlighttable <index> <tablename>` | ⚠️ Format verified, no example found |
+| `difficulty` | 1 | `difficulty <0-2>` | ✅ Format verified (0=easy, 1=med, 2=hard) |
 
 ## Flow Control
-* `break` - Break from loop
-* `ignore` - Ignore certain conditions (2 parameters)
+
+| Command | Parameters | Example | Status |
+|---------|------------|---------|--------|
+| `break` | 0 | `break` | ✅ Verified |
+| `ignore` | 2 | `ignore <entity> <flag>` | ⚠️ Illustrative placeholder |
+
+---
+
+### Legend
+
+* **✅ Verified** - Command fully verified from binary analysis
+* **⚠️ Illustrative placeholder** - Command exists but parameters are estimated/not confirmed
+* **⚠️ Format verified, no example found** - Parameter format confirmed but no real-world example discovered
 
 # Notes
 
