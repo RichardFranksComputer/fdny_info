@@ -6,8 +6,6 @@ Commands were found via:
 
 # Supported Commands
 
-# Game Command Reference
-
 ## Game Control Commands
 
 | Command | Parameters | Example | Status |
