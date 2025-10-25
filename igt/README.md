@@ -1,4 +1,7 @@
-# VERIFIED Timer System Analysis Summary
+THIS IS RAW OUTPUT FROM GHIDRASSIST
+not verified, do not treat as a source of truth
+
+#  Timer System Analysis Summary
 
 ## Critical Memory Addresses - VERIFIED FROM ASSEMBLY
 
