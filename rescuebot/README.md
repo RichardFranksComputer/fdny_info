@@ -30,10 +30,8 @@ Key Difficulty Mechanisms:
     - State 6: All rescue operations are disabled
 
 ### Full summary
+*Pretty sure this is largely hallucinated slop*
 
-# Comprehensive RescueBot System Summary
-
-## Overview
 The RescueBot is an AI-controlled subsystem that manages victim rescue operations in an emergency/disaster simulation game.  
 It dynamically spawns victims based on difficulty, tracks rescue progress, and determines when levels are complete.
 
