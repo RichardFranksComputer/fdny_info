@@ -40,7 +40,7 @@
     </CheatEntry>
     <CheatEntry>
       <ID>8</ID>
-      <Description>"current victim"</Description>
+      <Description>"rescued victims"</Description>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>4 Bytes</VariableType>
       <Address>00503a78</Address>
@@ -51,12 +51,12 @@
     </CheatEntry>
     <CheatEntry>
       <ID>9</ID>
-      <Description>"rescued victims"</Description>
+      <Description>"exit touched flag"</Description>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>4 Bytes</VariableType>
       <Address>00503a78</Address>
       <Offsets>
-        <Offset>352c</Offset>
+        <Offset>6e4</Offset>
         <Offset>30</Offset>
       </Offsets>
     </CheatEntry>
@@ -73,68 +73,6 @@
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>4 Bytes</VariableType>
       <Address>0x502af8</Address>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>12</ID>
-      <Description>"newspaper?"</Description>
-      <ShowAsSigned>0</ShowAsSigned>
-      <VariableType>4 Bytes</VariableType>
-      <Address>00502aac</Address>
-      <Offsets>
-        <Offset>44</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>13</ID>
-      <Description>"exit?"</Description>
-      <ShowAsSigned>0</ShowAsSigned>
-      <VariableType>4 Bytes</VariableType>
-      <Address>00502AB0</Address>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>14</ID>
-      <Description>"level state?"</Description>
-      <ShowAsSigned>0</ShowAsSigned>
-      <VariableType>4 Bytes</VariableType>
-      <Address>00502AAC</Address>
-      <Offsets>
-        <Offset>28c</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>15</ID>
-      <Description>"fade?"</Description>
-      <ShowAsSigned>0</ShowAsSigned>
-      <VariableType>4 Bytes</VariableType>
-      <Address>00502c98</Address>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>16</ID>
-      <Description>"video?"</Description>
-      <ShowAsSigned>0</ShowAsSigned>
-      <VariableType>4 Bytes</VariableType>
-      <Address>005030c4</Address>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>17</ID>
-      <Description>"No description"</Description>
-      <ShowAsSigned>0</ShowAsSigned>
-      <VariableType>Float</VariableType>
-      <Address>00502aac</Address>
-      <Offsets>
-        <Offset>280</Offset>
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>18</ID>
-      <Description>"No description"</Description>
-      <ShowAsSigned>0</ShowAsSigned>
-      <VariableType>4 Bytes</VariableType>
-      <Address>00502a88</Address>
-      <Offsets>
-        <Offset>10</Offset>
-        <Offset>6e4</Offset>
-      </Offsets>
     </CheatEntry>
   </CheatEntries>
   <UserdefinedSymbols/>
