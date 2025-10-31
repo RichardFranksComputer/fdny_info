@@ -23,21 +23,13 @@ startup
     // Define map groups that must be completed in sequence within each group
     vars.mapGroups = new Dictionary<string, List<string>>
     {
-        { "boat", new List<string> { "boat_a", "boat_b" } },
-        { "oil_rig", new List<string> { "oil_rig_a", "oil_rig_b", "oil_rig_c", "oil_rig_d" } },
-        { "subway", new List<string> { "subway_a", "subway_b" } },
-        // TEMPLATE GROUP - modify and regenerate
-        { "{{GROUP_NAME_PLACEHOLDER}}", new List<string> { "{{MAP_NAME_PLACEHOLDER}}_a", "{{MAP_NAME_PLACEHOLDER}}_b" } }
+        { "{{GROUP_NAME_PLACEHOLDER}}", new List<string> { "{{MAP_NAME_PLACEHOLDER}}" } }
     };
     
     // Standalone maps (any order)
     vars.standaloneMaps = new HashSet<string>
     {
-        "bank",
-        "bar_r",
-        "gas_r",
-        "mbase",
-        "training"
+        "{{MAP_NAME_PLACEHOLDER}}"
     };
     
     // Track completed standalone maps
@@ -46,9 +38,6 @@ startup
     // Track progress within each group
     vars.groupProgress = new Dictionary<string, int>
     {
-        { "boat", 0 },
-        { "oil_rig", 0 },
-        { "subway", 0 },
         { "{{GROUP_NAME_PLACEHOLDER}}", 0 }
     };
     

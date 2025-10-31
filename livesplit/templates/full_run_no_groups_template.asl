@@ -23,20 +23,7 @@ startup
     // All maps that need to be completed (any order)
     vars.allMaps = new HashSet<string>
     {
-        "bank",
-        "bar_r",
-        "boat_a",
-        "boat_b",
-        "gas_r",
-        "mbase",
-        "oil_rig_a",
-        "oil_rig_b",
-        "oil_rig_c",
-        "oil_rig_d",
-        "subway_a",
-        "subway_b",
-        "training",
-        "{{MAP_NAME_PLACEHOLDER}}"  // TEMPLATE - modify and regenerate
+        "{{MAP_NAME_PLACEHOLDER}}"
     };
     
     // Track completed maps

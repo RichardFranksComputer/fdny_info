@@ -161,6 +161,15 @@ Process: Bash parsing + awk text replacement
 {{MAP_NAME_PLACEHOLDER}}               # Replaced with actual map names
 {{GROUP_NAME_PLACEHOLDER}}             # Replaced with actual group names
 
+# Template Design Principle:
+# --------------------------------------------------------------------------------
+# ALL templates must be fully parameterized and contain ONLY placeholders,
+# never hardcoded map names or group data. Templates define STRUCTURE and LOGIC,
+# while maplists define DATA. This separation allows:
+#   - Modifying template logic independently of game data
+#   - Changing maplists without touching templates
+#   - Reusing templates for different games/configurations
+
 # Template Structure (all templates):
 # --------------------------------------------------------------------------------
 state("FDNYFirefighter", "1.0") {
@@ -198,12 +207,19 @@ Behavior:
   - Splits on levelEndSoundPlayed trigger
   - Manual reset only
 
-Variables to Generate:
-  - vars.mapGroups (Dictionary<string, List<string>>)
-  - vars.standaloneMaps (HashSet<string>)
-  - vars.groupProgress (Dictionary<string, int>)
-  - vars.completedGroups (HashSet<string>)
-  - vars.completedStandalone (HashSet<string>)
+Placeholder Structure (template contains ONLY these, no real data):
+  - vars.mapGroups: Single group with placeholder
+    { "{{GROUP_NAME_PLACEHOLDER}}", new List<string> { "{{MAP_NAME_PLACEHOLDER}}" } }
+  - vars.standaloneMaps: Single placeholder entry
+    "{{MAP_NAME_PLACEHOLDER}}"
+  - vars.groupProgress: Single group with placeholder
+    { "{{GROUP_NAME_PLACEHOLDER}}", 0 }
+
+Generator Replaces:
+  - Entire mapGroups dictionary with all actual groups from maplist
+  - Entire standaloneMaps set with all standalone maps from maplist
+  - Entire groupProgress dictionary with all actual groups
+  - Init block groupProgress lines with all actual groups
 
 # Full Run No Groups Template Specifics:
 # --------------------------------------------------------------------------------
@@ -214,9 +230,12 @@ Behavior:
   - Splits on levelEndSoundPlayed trigger
   - Manual reset only
 
-Variables to Generate:
-  - vars.allMaps (HashSet<string>)
-  - vars.completedMaps (HashSet<string>)
+Placeholder Structure (template contains ONLY this, no real data):
+  - vars.allMaps: Single placeholder entry
+    "{{MAP_NAME_PLACEHOLDER}}"
+
+Generator Replaces:
+  - Entire allMaps set with all actual maps from maplist (ignores group markers)
 
 # GITHUB ACTIONS
 # ================================================================================
@@ -442,7 +461,16 @@ Fix:
   - Updated awk script to properly skip and replace groupProgress lines
 Date: 2025-10-31
 
-Issue: Hardcoded paths duplicated between config.sh and GitHub Actions workflows
+Issue: Templates contained hardcoded map names and group definitions
+Cause: Templates were storing both structure AND data, violating separation of concerns
+Fix:
+  - Removed all hardcoded map names from full_run_template.asl
+  - Removed all hardcoded group definitions (boat, oil_rig, subway)
+  - Reduced to single placeholder entries showing only structure
+  - Generator now replaces entire dictionary/set contents from maplist
+  - Templates now define only LOGIC and STRUCTURE, maplist defines DATA
+Benefits: Can modify template logic or maplist data independently, true template reusability
+Date: 2025-10-31
 Cause: Workflows contained literal path strings instead of sourcing from config
 Fix:
   - Workflows now source config.sh directly with `source livesplit/scripts/config.sh`
