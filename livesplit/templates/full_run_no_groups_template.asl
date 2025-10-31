@@ -1,16 +1,5 @@
 state("FDNYFirefighter", "1.0")
-{
-    /*
-     * ==============================================================================
-     * FDNY FIREFIGHTER - FULL RUN NO GROUPS AUTO SPLITTER TEMPLATE
-     * ==============================================================================
-     * 
-     * This template is used to generate full_run_no_groups.asl with flat splits.
-     * All maps can be completed in any order, no grouping enforced.
-     * 
-     * Memory addresses match IL template for consistency.
-     */
-    
+{  
     int gameState : 0x00502AAC, 0x6F0;
     string10 mapName : 0x00502AAC, 0x688, 0x0, 0xC;
     int totalVictims : 0x00503A78, 0x30, 0x3528;
