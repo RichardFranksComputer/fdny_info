@@ -24,7 +24,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+          ref: ${{ github.ref_name }}
+
       - name: Run full run ASL generators
         run: |
           chmod +x livesplit/scripts/full_run_asl_generator.sh
@@ -57,5 +58,6 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Auto-generate full run ASL files [skip ci]"
-            git push
+            branch_name="${GITHUB_REF_NAME}"
+            git push origin "$branch_name"
           fi
