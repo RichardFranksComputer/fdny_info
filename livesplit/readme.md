@@ -6,9 +6,10 @@ Automated ASL file generation for FDNY Firefighter speedruns.
 
 **To add/modify maps or change split behavior:**
 
-1. Edit files directly in GitHub (click pencil icon)
-2. Commit changes
-3. ASL files automatically regenerate via GitHub Actions
+1. Fork this repo, and perform the following steps in the forked repo
+2. Edit files directly in GitHub (click pencil icon)
+3. Commit changes
+4. ASL files automatically regenerate via GitHub Actions
 
 **Edit these files:**
 - `il_maplist.txt` - Add/remove individual level maps (one per line)
