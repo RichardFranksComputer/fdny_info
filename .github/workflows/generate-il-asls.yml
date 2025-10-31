@@ -1,0 +1,50 @@
+name: Generate Individual Level ASL Files
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'livesplit/templates/il_template.asl'
+      - 'livesplit/il_maplist.txt'
+      - 'livesplit/scripts/il_asl_generator.sh'
+      - 'livesplit/scripts/config.sh'
+  workflow_dispatch:  # Allows manual trigger from Actions tab
+
+jobs:
+  generate-asl-files:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for git commands
+      
+      - name: Make script executable
+        run: chmod +x livesplit/scripts/il_asl_generator.sh
+      
+      - name: Run ASL generator
+        run: ./livesplit/scripts/il_asl_generator.sh
+      
+      - name: Check if files were generated
+        run: |
+          if [ ! -d "livesplit/individual_level_asls" ] || [ -z "$(ls -A livesplit/individual_level_asls)" ]; then
+            echo "Error: No ASL files were generated"
+            exit 1
+          fi
+          echo "Successfully generated $(ls -1 livesplit/individual_level_asls/*.asl | wc -l) ASL files"
+      
+      - name: Commit and push generated files
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add livesplit/individual_level_asls/*.asl
+          
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Auto-generate individual level ASL files [skip ci]"
+            git push
+          fi
