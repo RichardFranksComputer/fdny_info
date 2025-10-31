@@ -3,7 +3,7 @@ name: Generate Full Run ASL Files
 on:
   push:
     branches:
-      - main
+      - '**'
     paths:
       - 'livesplit/templates/full_run_template.asl'
       - 'livesplit/templates/full_run_no_groups_template.asl'
@@ -11,17 +11,19 @@ on:
       - 'livesplit/scripts/full_run_asl_generator.sh'
       - 'livesplit/scripts/full_run_no_groups_asl_generator.sh'
       - 'livesplit/scripts/config.sh'
-  workflow_dispatch:  # Allows manual trigger from Actions tab
+  workflow_dispatch:
 
 jobs:
   generate-full-run-asls:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full history for git commands
+          fetch-depth: 0
       
       - name: Run full run ASL generators
         run: |
@@ -51,8 +53,6 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add $FULL_RUN_OUTPUT_FILE $FULL_RUN_NO_GROUPS_OUTPUT_FILE
-          
-          # Check if there are changes to commit
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
