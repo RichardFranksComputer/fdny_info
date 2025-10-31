@@ -9,7 +9,7 @@ put up a PR if you wanna contribute ok
 
 - [livesplit/all_values_for_livesplit.ct](livesplit/all_values_for_livesplit.ct) contains all the necessary variables, directly hooked to the game's .exe, for livesplit to successfully time a level.
 
-- [livesplit/training.asl[(livesplit/training.asl) is an untested livesplit for the training level.  It can be used for reference.
+- [livesplit/training.asl](livesplit/training.asl) is an untested livesplit for the training level.  It can be used for reference.
 
 # other info
 
