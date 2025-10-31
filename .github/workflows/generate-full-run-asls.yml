@@ -1,0 +1,61 @@
+name: Generate Full Run ASL Files
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'livesplit/templates/full_run_template.asl'
+      - 'livesplit/templates/full_run_no_groups_template.asl'
+      - 'livesplit/full_run_maplist.txt'
+      - 'livesplit/scripts/full_run_asl_generator.sh'
+      - 'livesplit/scripts/full_run_no_groups_asl_generator.sh'
+      - 'livesplit/scripts/config.sh'
+  workflow_dispatch:  # Allows manual trigger from Actions tab
+
+jobs:
+  generate-full-run-asls:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for git commands
+      
+      - name: Run full run ASL generators
+        run: |
+          chmod +x livesplit/scripts/full_run_asl_generator.sh
+          chmod +x livesplit/scripts/full_run_no_groups_asl_generator.sh
+          ./livesplit/scripts/full_run_asl_generator.sh
+          ./livesplit/scripts/full_run_no_groups_asl_generator.sh
+      
+      - name: Check if files were generated
+        run: |
+          source livesplit/scripts/config.sh
+          if [ ! -f "$FULL_RUN_OUTPUT_FILE" ]; then
+            echo "Error: full_run.asl was not generated"
+            exit 1
+          fi
+          if [ ! -f "$FULL_RUN_NO_GROUPS_OUTPUT_FILE" ]; then
+            echo "Error: full_run_no_groups.asl was not generated"
+            exit 1
+          fi
+          echo "Successfully generated full run ASL files"
+          echo "full_run.asl: $(stat -c%s $FULL_RUN_OUTPUT_FILE) bytes"
+          echo "full_run_no_groups.asl: $(stat -c%s $FULL_RUN_NO_GROUPS_OUTPUT_FILE) bytes"
+      
+      - name: Commit and push generated files
+        run: |
+          source livesplit/scripts/config.sh
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add $FULL_RUN_OUTPUT_FILE $FULL_RUN_NO_GROUPS_OUTPUT_FILE
+          
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Auto-generate full run ASL files [skip ci]"
+            git push
+          fi

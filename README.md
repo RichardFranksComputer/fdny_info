@@ -1,22 +1,37 @@
 # FDNY: American Fist Fighter
 
-a central location for the FELLAS to store technical info about FDNY
+A central location for the FELLAS to store technical info about FDNY.
 
-put up a PR if you wanna contribute ok
+put up a pr if you want to contribute ok
 
+## LiveSplit Auto Splitters
 
-## Most valuable info
+The `livesplit/` folder contains automated ASL generation for FDNY Firefighter speedruns.
 
-- [livesplit/all_values_for_livesplit.ct](livesplit/all_values_for_livesplit.ct) contains all the necessary variables, directly hooked to the game's .exe, for livesplit to successfully time a level.
+**Quick Start:**
+```bash
+./livesplit/scripts/il_asl_generator.sh              # Generate 13 individual level ASLs
+./livesplit/scripts/full_run_asl_generator.sh        # Generate full run ASL (with groups)
+./livesplit/scripts/full_run_no_groups_asl_generator.sh  # Generate full run ASL (flat)
+```
 
-- [livesplit/training.asl](livesplit/training.asl) is an untested livesplit for the training level.  It can be used for reference.
+**Key Files:**
+- [livesplit/readme.md](livesplit/readme.md) - Complete LiveSplit documentation
+- [livesplit/all_values_for_livesplit.ct](livesplit/all_values_for_livesplit.ct) - Cheat Engine verification file
+- [livesplit/templates/](livesplit/templates/) - ASL template files
+- [livesplit/individual_level_asls/](livesplit/individual_level_asls/) - Generated IL ASLs (13 files)
+- [livesplit/full_run.asl](livesplit/full_run.asl) - Generated full run with groups
+- [livesplit/full_run_no_groups.asl](livesplit/full_run_no_groups.asl) - Generated full run (any order)
 
-# other info
+**Features:**
+- Automated generation from templates
+- GitHub Actions integration
+- Group-based sequencing for full runs
+- Consistent memory addresses across all ASLs
 
-- `console` folder contains info about the console and its commands
+## Other Info
 
-- `rescuebot` folder contains info about the rescuebot
-
-- `livesplit` folder contains notes, cheatengine file, and theoretical untested .asl's.
-
-- `museum` folder contains a bunch of rambling disjointed files I wanted to keep around that were made during researching
+- `console/` - Info about the console and its commands
+- `rescuebot/` - Info about the rescuebot AI behavior
+- `museum/` - Research notes and reverse engineering findings
+- `victory_screen/` - Victory screen detection research
