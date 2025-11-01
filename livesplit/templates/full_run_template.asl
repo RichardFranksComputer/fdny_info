@@ -64,8 +64,22 @@ init
 
 start
 {
-    // Manual start only - no auto-start
-    return false;
+    // Start when: game state becomes 1
+    if (settings["autostart"] && 
+        current.gameState == 1 && 
+        old.gameState != 1 && 
+        !vars.hasStarted)
+    {
+        print("[START] Timer started - map: '" + current.mapName + "'");
+        vars.hasStarted = true;
+        vars.hasSplit = false;
+        return true;
+    }
+    
+    if (settings["autostart"] && current.gameState == 1 && old.gameState != 1)
+    {
+        print("[START] Checked start - gameState changed, map: '" + current.mapName + "', hasStarted: " + vars.hasStarted);
+    }
 }
 
 split

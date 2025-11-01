@@ -43,7 +43,7 @@
       <Path>LiveSplit.ScriptableAutoSplit.dll</Path>
       <Settings>
         <Version>1.5</Version>
-        <ScriptPath>C:\Users\rick\Documents\GitHub\fdny_info\livesplit\full_run_asls\full_run_no_groups.asl</ScriptPath>
+        <ScriptPath>C:\Users\rick\Documents\GitHub\fdny_info\livesplit\full_run_asls\full_run.asl</ScriptPath>
         <Start>True</Start>
         <Reset>True</Reset>
         <Split>True</Split>
