@@ -57,6 +57,7 @@ startup
     // Prevent double-triggers
     vars.hasStarted = false;
     vars.lastCompletedMap = "";
+    vars.gameReady = false;
     
     print("[STARTUP] Tracking " + vars.mapGroups.Count + " groups, " + vars.standaloneMaps.Count + " standalone maps");
 }
@@ -72,11 +73,15 @@ init
     vars.groupProgress["oil_rig"] = 0;
     vars.groupProgress["subway"] = 0;
     vars.lastCompletedMap = "";
+    vars.gameReady = false;
     print("[INIT] Reset complete - all tracking cleared");
 }
 
 start
 {
+    if (!vars.gameReady)
+        return false;
+    
     // Start when: game state becomes 1
     if (settings["autostart"] && 
         current.gameState == 1 && 
@@ -97,6 +102,9 @@ start
 
 split
 {
+    if (!vars.gameReady)
+        return false;
+    
     // Split when level end sound plays (map completion)
     if (current.levelEndSoundPlayed != 0 && 
         old.levelEndSoundPlayed == 0)
@@ -193,4 +201,23 @@ isLoading
 {
     // No load time removal
     return false;
+}
+
+update
+{
+    if (current.gameState == 0 && old.gameState == 0)
+    {
+        if (vars.gameReady)
+        {
+            print("[UPDATE] Returned to menu - game no longer ready");
+            vars.gameReady = false;
+        }
+        return false;
+    }
+    
+    if (!vars.gameReady && current.gameState == 1)
+    {
+        vars.gameReady = true;
+        print("[UPDATE] Game ready - in level");
+    }
 }
