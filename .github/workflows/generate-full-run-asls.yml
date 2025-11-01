@@ -5,7 +5,7 @@ on:
     branches:
       - '**'
     paths:
-      - 'livesplit/*'
+      - 'livesplit/**'
   workflow_dispatch:
 
 jobs:
