@@ -85,7 +85,7 @@ start
     if (settings["autostart"] && 
         current.gameState == 1 && 
         old.gameState != 1 && 
-        current.mapName.ToLower().Contains("training") &&
+        current.mapName.ToLower().Trim().Contains("training") &&
         !vars.hasStarted)
     {
         vars.hasStarted = true;
