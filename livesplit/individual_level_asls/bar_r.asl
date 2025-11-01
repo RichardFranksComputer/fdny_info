@@ -85,7 +85,7 @@ start
     if (settings["autostart"] && 
         current.gameState == 1 && 
         old.gameState != 1 && 
-        current.mapName.ToLower().Contains("bar_r") &&
+        current.mapName.ToLower().Trim().Contains("bar_r") &&
         !vars.hasStarted)
     {
         vars.hasStarted = true;

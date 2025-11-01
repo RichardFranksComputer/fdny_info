@@ -5,10 +5,7 @@ on:
     branches:
       - '**'
     paths:
-      - 'livesplit/templates/il_template.asl'
-      - 'livesplit/il_maplist.txt'
-      - 'livesplit/scripts/il_asl_generator.sh'
-      - 'livesplit/scripts/config.sh'
+      - 'livesplit/*'
   workflow_dispatch:
 
 jobs:

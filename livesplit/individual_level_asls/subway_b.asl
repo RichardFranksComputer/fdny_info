@@ -85,7 +85,7 @@ start
     if (settings["autostart"] && 
         current.gameState == 1 && 
         old.gameState != 1 && 
-        current.mapName.ToLower().Contains("subway_b") &&
+        current.mapName.ToLower().Trim().Contains("subway_b") &&
         !vars.hasStarted)
     {
         vars.hasStarted = true;

@@ -5,12 +5,7 @@ on:
     branches:
       - '**'
     paths:
-      - 'livesplit/templates/full_run_template.asl'
-      - 'livesplit/templates/full_run_no_groups_template.asl'
-      - 'livesplit/full_run_maplist.txt'
-      - 'livesplit/scripts/full_run_asl_generator.sh'
-      - 'livesplit/scripts/full_run_no_groups_asl_generator.sh'
-      - 'livesplit/scripts/config.sh'
+      - 'livesplit/*'
   workflow_dispatch:
 
 jobs:

@@ -85,7 +85,7 @@ start
     if (settings["autostart"] && 
         current.gameState == 1 && 
         old.gameState != 1 && 
-        current.mapName.ToLower().Contains("boat_a") &&
+        current.mapName.ToLower().Trim().Contains("boat_a") &&
         !vars.hasStarted)
     {
         vars.hasStarted = true;

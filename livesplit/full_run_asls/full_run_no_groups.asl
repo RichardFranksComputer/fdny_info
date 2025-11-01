@@ -53,18 +53,17 @@ split
     if (current.levelEndSoundPlayed != 0 && 
         old.levelEndSoundPlayed == 0)
     {
-        string completedMap = current.mapName.ToLower();
-        
-        // Prevent duplicate splits for same map
-        if (completedMap == vars.lastCompletedMap)
-            return false;
-        
-        vars.lastCompletedMap = completedMap;
+        string completedMap = current.mapName.ToLower().Trim();
         
         // Check if this map needs to be tracked
         if (vars.allMaps.Contains(completedMap) && 
             !vars.completedMaps.Contains(completedMap))
         {
+            // Prevent duplicate splits for same map
+            if (completedMap == vars.lastCompletedMap)
+                return false;
+            
+            vars.lastCompletedMap = completedMap;
             vars.completedMaps.Add(completedMap);
             print("Completed: " + completedMap + " (" + vars.completedMaps.Count + "/" + vars.allMaps.Count + ")");
             return true;
