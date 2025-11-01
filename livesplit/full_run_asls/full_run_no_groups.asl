@@ -1,5 +1,16 @@
 state("FDNYFirefighter", "1.0")
-{  
+{
+    /*
+     * ==============================================================================
+     * FDNY FIREFIGHTER - FULL RUN NO GROUPS AUTO SPLITTER TEMPLATE
+     * ==============================================================================
+     * 
+     * This template is used to generate full_run_no_groups.asl with flat splits.
+     * All maps can be completed in any order, no grouping enforced.
+     * 
+     * Memory addresses match IL template for consistency.
+     */
+    
     int gameState : 0x00502AAC, 0x6F0;
     string10 mapName : 0x00502AAC, 0x688, 0x0, 0xC;
     int totalVictims : 0x00503A78, 0x30, 0x3528;
@@ -32,6 +43,8 @@ startup
     
     // Prevent double-triggers
     vars.lastCompletedMap = "";
+    
+    print("[STARTUP] Tracking " + vars.allMaps.Count + " maps");
 }
 
 init
@@ -39,6 +52,7 @@ init
     // Reset flags when game loads
     vars.completedMaps.Clear();
     vars.lastCompletedMap = "";
+    print("[INIT] Reset complete - completedMaps cleared, lastCompletedMap cleared");
 }
 
 start
@@ -53,7 +67,9 @@ split
     if (current.levelEndSoundPlayed != 0 && 
         old.levelEndSoundPlayed == 0)
     {
+        print("[SOUND] Level end sound detected - raw mapName: '" + current.mapName + "'");
         string completedMap = current.mapName.ToLower().Trim();
+        print("[MAP] Processed map: '" + completedMap + "'");
         
         // Check if this map needs to be tracked
         if (vars.allMaps.Contains(completedMap) && 
@@ -61,12 +77,23 @@ split
         {
             // Prevent duplicate splits for same map
             if (completedMap == vars.lastCompletedMap)
+            {
+                print("[DUPLICATE] Blocked duplicate split for: " + completedMap);
                 return false;
+            }
             
             vars.lastCompletedMap = completedMap;
             vars.completedMaps.Add(completedMap);
             print("Completed: " + completedMap + " (" + vars.completedMaps.Count + "/" + vars.allMaps.Count + ")");
             return true;
+        }
+        else if (!vars.allMaps.Contains(completedMap))
+        {
+            print("[MAP] Not tracked: " + completedMap);
+        }
+        else
+        {
+            print("[MAP] Already completed: " + completedMap);
         }
     }
     
