@@ -60,18 +60,17 @@ split
     if (current.levelEndSoundPlayed != 0 && 
         old.levelEndSoundPlayed == 0)
     {
-        string completedMap = current.mapName.ToLower();
-        
-        // Prevent duplicate splits for same map
-        if (completedMap == vars.lastCompletedMap)
-            return false;
-        
-        vars.lastCompletedMap = completedMap;
+        string completedMap = current.mapName.ToLower().Trim();
         
         // Check if it's a standalone map
         if (vars.standaloneMaps.Contains(completedMap) && 
             !vars.completedStandalone.Contains(completedMap))
         {
+            // Prevent duplicate splits for same map
+            if (completedMap == vars.lastCompletedMap)
+                return false;
+            
+            vars.lastCompletedMap = completedMap;
             vars.completedStandalone.Add(completedMap);
             print("Completed standalone: " + completedMap);
             return true;
@@ -93,6 +92,11 @@ split
             if (currentProgress < mapsInGroup.Count && 
                 completedMap == mapsInGroup[currentProgress])
             {
+                // Prevent duplicate splits for same map
+                if (completedMap == vars.lastCompletedMap)
+                    return false;
+                
+                vars.lastCompletedMap = completedMap;
                 vars.groupProgress[groupName]++;
                 print("Completed " + groupName + ": " + completedMap + 
                       " (" + vars.groupProgress[groupName] + "/" + mapsInGroup.Count + ")");
