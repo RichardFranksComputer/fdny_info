@@ -87,6 +87,13 @@ init
 start
 {
     // Start when: game state becomes 1 AND map is "training"
+    if (current.gameState == 1 && old.gameState != 1)
+    {
+        print("[START] gameState transition detected - old: " + old.gameState + ", current: " + current.gameState);
+        print("[START] mapName: '" + current.mapName + "', hasStarted: " + vars.hasStarted);
+        print("[START] settings autostart: " + settings["autostart"]);
+    }
+    
     if (settings["autostart"] && 
         current.gameState == 1 && 
         old.gameState != 1 && 
@@ -97,11 +104,6 @@ start
         vars.hasStarted = true;
         vars.hasSplit = false;
         return true;
-    }
-    
-    if (settings["autostart"] && current.gameState == 1 && old.gameState != 1)
-    {
-        print("[START] Checked start - gameState changed, map: '" + current.mapName + "', hasStarted: " + vars.hasStarted);
     }
 }
 
@@ -135,6 +137,11 @@ isLoading
 
 update
 {
+    if (current.gameState != old.gameState)
+    {
+        print("[UPDATE] gameState changed: " + old.gameState + " -> " + current.gameState);
+    }
+    
     if (current.gameState == 0 && old.gameState == 0)
     {
         if (vars.gameReady)
@@ -143,6 +150,14 @@ update
             vars.gameReady = false;
         }
         return false;
+    }
+    
+    if (current.gameState == 0 && old.gameState != 0)
+    {
+        print("[UPDATE] Exited to menu - resetting hasStarted and hasSplit");
+        vars.hasStarted = false;
+        vars.hasSplit = false;
+        vars.gameReady = false;
     }
     
     if (!vars.gameReady && current.gameState == 1)
