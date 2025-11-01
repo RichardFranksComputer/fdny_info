@@ -68,9 +68,6 @@ init
 
 start
 {
-    if (!vars.gameReady)
-        return false;
-    
     // Start when: game state becomes 1
     if (settings["autostart"] && 
         current.gameState == 1 && 

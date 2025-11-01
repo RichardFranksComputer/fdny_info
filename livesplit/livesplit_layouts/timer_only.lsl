@@ -43,11 +43,14 @@
       <Path>LiveSplit.ScriptableAutoSplit.dll</Path>
       <Settings>
         <Version>1.5</Version>
-        <ScriptPath>C:\Users\rick\Documents\GitHub\fdny_info\livesplit\full_run_asls\full_run.asl</ScriptPath>
+        <ScriptPath>C:\Users\rick\Documents\GitHub\fdny_info\livesplit\individual_level_asls\training.asl</ScriptPath>
         <Start>True</Start>
         <Reset>True</Reset>
         <Split>True</Split>
-        <CustomSettings />
+        <CustomSettings>
+          <Setting id="autostart" type="bool">True</Setting>
+          <Setting id="autosplit" type="bool">True</Setting>
+        </CustomSettings>
       </Settings>
     </Component>
     <Component>
