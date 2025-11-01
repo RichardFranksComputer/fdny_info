@@ -20,6 +20,7 @@ state("FDNYFirefighter", "1.0")
 
 startup
 {
+    settings.Add("autostart", true, "Auto-start timer");
 
     // All maps that need to be completed (any order)
     vars.allMaps = new HashSet<string>
