@@ -72,7 +72,7 @@ startup
     vars.hasSplit = false;
     vars.gameReady = false;
     
-    print("[STARTUP] IL mode - autostart: " + settings["autostart"] + ", autosplit: " + settings["autosplit"]);
+    print("[STARTUP] IL mode");
 }
 
 init
