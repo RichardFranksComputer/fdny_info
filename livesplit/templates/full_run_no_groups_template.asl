@@ -135,6 +135,13 @@ update
         return false;
     }
     
+    if (current.gameState == 0 && old.gameState != 0)
+    {
+        print("[UPDATE] Exited to menu - resetting hasStarted");
+        vars.hasStarted = false;
+        vars.gameReady = false;
+    }
+    
     if (!vars.gameReady && current.gameState == 1)
     {
         vars.gameReady = true;
