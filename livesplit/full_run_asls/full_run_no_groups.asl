@@ -20,6 +20,7 @@ state("FDNYFirefighter", "1.0")
 
 startup
 {
+
     // All maps that need to be completed (any order)
     vars.allMaps = new HashSet<string>
     {
