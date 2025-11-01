@@ -1,168 +1,131 @@
-state("FDNYFirefighter", "1.0")
+/*
+ * ==============================================================================
+ * FDNY FIREFIGHTER - AUTO SPLITTER TEMPLATE
+ * ==============================================================================
+ * 
+ * SETUP INSTRUCTIONS:
+ * 1. Replace subway_b with your target map name (e.g., "training")
+ * 2. Load this script in LiveSplit via Edit Splits → Settings → Browse
+ * 3. Monitor debug output in DebugView++ (https://github.com/CobaltFusion/DebugViewPP)
+ * 
+ * LOGIC:
+ * - START: gameState=1, levelEndSoundPlayed=0, mapName contains placeholder
+ * - SPLIT: levelEndSoundPlayed 0→non-zero, gameState=1, correct map
+ * - RESET: gameState 0→1, levelEndSoundPlayed non-zero→0, correct map
+ * 
+ * ==============================================================================
+ */
+
+state("FDNYFirefighter")
 {
-    /*
-     * ==============================================================================
-     * FDNY FIREFIGHTER - MEMORY VARIABLES REFERENCE
-     * ==============================================================================
-     * 
-     * All variables below are accessible via 'current' and 'old' state objects:
-     *   - current.variableName = current frame value
-     *   - old.variableName = previous frame value
-     * 
-     * Use state comparison (current vs old) to detect changes and trigger actions.
-     * 
-     * ------------------------------------------------------------------------------
-     * 
-     * gameState (int)
-     *   Address: 0x00502AAC -> 0x6F0
-     *   Values:
-     *     0 = Main Menu / Not in game
-     *     1 = In-Game / Playing level
-     *   Usage Examples:
-     *     - Start timer: current.gameState == 1 && old.gameState != 1
-     *     - Detect exit to menu: current.gameState == 0 && old.gameState == 1
-     * 
-     * mapName (string10)
-     *   Address: 0x00502AAC -> 0x688 -> 0x0 -> 0xC
-     *   Type: 10-character string
-     *   Values: Level names like "subway_b", "mission1", etc.
-     *   Usage Examples:
-     *     - Check specific level: current.mapName.ToLower().Contains("subway_b")
-     *     - Level change: current.mapName != old.mapName
-     *     - Level-specific splits: Use in combination with other triggers
-     * 
-     * totalVictims (int)
-     *   Address: 0x00503A78 -> 0x30 -> 0x3528
-     *   Values: Number of total victims in the current level (e.g., 5, 10)
-     *   Usage Examples:
-     *     - Check completion: current.rescuedVictims == current.totalVictims
-     *     - Verify level loaded: current.totalVictims > 0
-     * 
-     * rescuedVictims (int)
-     *   Address: 0x00503A78 -> 0x30 -> 0x352C
-     *   Values: Count of victims rescued so far (0 to totalVictims)
-     *   Usage Examples:
-     *     - Split on each rescue: current.rescuedVictims > old.rescuedVictims
-     *     - Split on specific count: current.rescuedVictims == 3
-     *     - All rescued: current.rescuedVictims == current.totalVictims
-     * 
-     * levelEndSoundPlayed (int)
-     *   Address: 0x00503A78 -> 0x8 -> 0x0 -> 0x104 -> 0x0
-     *   Values:
-     *     0 = Sound has not played / Level not complete
-     *     Non-zero = Level end sound has played (completion)
-     *   Usage Examples:
-     *     - Split on completion: current.levelEndSoundPlayed != 0 && old.levelEndSoundPlayed == 0
-     */
-    
-    int gameState : 0x00502AAC, 0x6F0;
-    string10 mapName : 0x00502AAC, 0x688, 0x0, 0xC;
-    int totalVictims : 0x00503A78, 0x30, 0x3528;
-    int rescuedVictims : 0x00503A78, 0x30, 0x352C;
-    int levelEndSoundPlayed : 0x00503A78, 0x8, 0x0, 0x104, 0x0;
+    int gameState : 0x00102AAC, 0x6F0;
+    string10 mapName : 0x00102AAC, 0x688, 0x0, 0xC;
+    int totalVictims : 0x00103A78, 0x30, 0x3528;
+    int rescuedVictims : 0x00103A78, 0x30, 0x352C;
+    int levelEndSoundPlayed : 0x00103A78, 0x8, 0x0, 0x104, 0x0;
 }
 
 startup
 {
-    settings.Add("autostart", true, "Auto-start timer on subway_b level");
-    settings.Add("autosplit", true, "Auto-split on level end sound");
-    
-    // Prevent double-triggers
-    vars.hasStarted = false;
+    print("[FDNY] Script loaded - Target map: subway_b");
+    vars.frameCount = 0;
     vars.hasSplit = false;
-    vars.gameReady = false;
-    
-    print("[STARTUP] IL mode initialized");
 }
 
 init
 {
-    // Reset flags when game loads
-    vars.hasStarted = false;
+    print("[FDNY] Game process found, initializing");
+    vars.frameCount = 0;
     vars.hasSplit = false;
-    vars.gameReady = false;
-    print("[INIT] Reset complete - hasStarted: false, hasSplit: false");
-}
-
-start
-{
-    // Start when: game state becomes 1 AND map is "subway_b"
-    if (current.gameState == 1 && old.gameState != 1)
-    {
-        print("[START] gameState transition detected - old: " + old.gameState + ", current: " + current.gameState);
-        print("[START] mapName: '" + current.mapName + "', hasStarted: " + vars.hasStarted);
-        print("[START] settings autostart: " + settings["autostart"]);
-    }
-    
-    if (settings["autostart"] && 
-        current.gameState == 1 && 
-        old.gameState != 1 && 
-        current.mapName.ToLower().Trim().Contains("subway_b") &&
-        !vars.hasStarted)
-    {
-        print("[START] Timer started - map: '" + current.mapName + "'");
-        vars.hasStarted = true;
-        vars.hasSplit = false;
-        return true;
-    }
-}
-
-split
-{
-    if (!vars.gameReady)
-        return false;
-    
-    if (settings["autosplit"] && 
-        current.levelEndSoundPlayed != 0 && 
-        old.levelEndSoundPlayed == 0 &&
-        !vars.hasSplit)
-    {
-        print("[SPLIT] Level end sound - splitting");
-        vars.hasSplit = true;
-        return true;
-    }
-    
-    if (settings["autosplit"] && current.levelEndSoundPlayed != 0 && old.levelEndSoundPlayed == 0)
-    {
-        print("[SPLIT] Level end sound detected but hasSplit already true");
-    }
-}
-
-isLoading
-{
-    // Pause timer during loading screens
-    // Detect loading state if gameState indicates loading
-    return false;
 }
 
 update
 {
-    if (current.gameState != old.gameState)
+    vars.frameCount++;
+    
+    // Heartbeat every 20 frames
+    if (vars.frameCount % 20 == 0)
     {
-        print("[UPDATE] gameState changed: " + old.gameState + " -> " + current.gameState);
+        print(String.Format("[FDNY HEARTBEAT] Frame:{0} | gameState:{1} | map:'{2}' | victims:{3}/{4} | endSound:{5} | split:{6}",
+            vars.frameCount,
+            current.gameState,
+            current.mapName,
+            current.rescuedVictims,
+            current.totalVictims,
+            current.levelEndSoundPlayed,
+            vars.hasSplit));
     }
     
-    if (current.gameState == 0 && old.gameState == 0)
+    // Reset split flag when exiting to menu
+    if (old.gameState == 1 && current.gameState == 0)
     {
-        if (vars.gameReady)
-        {
-            print("[UPDATE] Returned to menu - game no longer ready");
-            vars.gameReady = false;
-        }
-        return false;
-    }
-    
-    if (current.gameState == 0 && old.gameState != 0)
-    {
-        print("[UPDATE] Exited to menu - resetting hasStarted and hasSplit");
-        vars.hasStarted = false;
+        print("[FDNY] Exited to menu - reset split flag");
         vars.hasSplit = false;
-        vars.gameReady = false;
+    }
+}
+
+start
+{
+    // Only process when gameState is valid
+    if (current.gameState != 1)
+        return false;
+    
+    bool stateCheck = current.gameState == 1;
+    bool soundCheck = current.levelEndSoundPlayed == 0;
+    bool mapCheck = current.mapName.ToLower().Trim().Contains("subway_b");
+    
+    print(String.Format("[FDNY START] Checks - state:1={0} | sound:0={1} | map:match={2}",
+        stateCheck, soundCheck, mapCheck));
+    
+    if (stateCheck && soundCheck && mapCheck)
+    {
+        print("[FDNY START] ✓✓✓ TIMER STARTED");
+        vars.hasSplit = false;
+        return true;
     }
     
-    if (!vars.gameReady && current.gameState == 1)
+    return false;
+}
+
+split
+{
+    // Only process when gameState is valid
+    if (current.gameState != 1)
+        return false;
+    
+    bool stateCheck = current.gameState == 1;
+    bool soundTransition = old.levelEndSoundPlayed == 0 && current.levelEndSoundPlayed != 0;
+    bool mapCheck = current.mapName.ToLower().Trim().Contains("subway_b");
+    bool notSplit = !vars.hasSplit;
+    
+    print(String.Format("[FDNY SPLIT] Checks - state:1={0} | sound:0→1={1} | map:match={2} | notSplit={3}",
+        stateCheck, soundTransition, mapCheck, notSplit));
+    
+    if (stateCheck && soundTransition && mapCheck && notSplit)
     {
-        vars.gameReady = true;
-        print("[UPDATE] Game ready - in level");
+        print("[FDNY SPLIT] ✓✓✓ SPLIT TRIGGERED");
+        vars.hasSplit = true;
+        return true;
     }
+    
+    return false;
+}
+
+reset
+{
+    bool stateTransition = old.gameState == 0 && current.gameState == 1;
+    bool soundTransition = old.levelEndSoundPlayed != 0 && current.levelEndSoundPlayed == 0;
+    bool mapCheck = current.mapName.ToLower().Trim().Contains("subway_b");
+    
+    print(String.Format("[FDNY RESET] Checks - state:0→1={0} | sound:1→0={1} | map:match={2}",
+        stateTransition, soundTransition, mapCheck));
+    
+    if (stateTransition && soundTransition && mapCheck)
+    {
+        print("[FDNY RESET] ✓✓✓ TIMER RESET");
+        vars.hasSplit = false;
+        return true;
+    }
+    
+    return false;
 }
