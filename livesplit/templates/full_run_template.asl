@@ -20,6 +20,8 @@ state("FDNYFirefighter", "1.0")
 
 startup
 {
+    settings.Add("autostart", true, "Auto-start timer on {{MAP_NAME_PLACEHOLDER}} level");
+
     // Define map groups that must be completed in sequence within each group
     vars.mapGroups = new Dictionary<string, List<string>>
     {
