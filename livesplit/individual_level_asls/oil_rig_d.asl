@@ -70,6 +70,8 @@ startup
     // Prevent double-triggers
     vars.hasStarted = false;
     vars.hasSplit = false;
+    
+    print("[STARTUP] IL mode - autostart: " + settings["autostart"] + ", autosplit: " + settings["autosplit"]);
 }
 
 init
@@ -77,6 +79,7 @@ init
     // Reset flags when game loads
     vars.hasStarted = false;
     vars.hasSplit = false;
+    print("[INIT] Reset complete - hasStarted: false, hasSplit: false");
 }
 
 start
@@ -88,9 +91,15 @@ start
         current.mapName.ToLower().Trim().Contains("oil_rig_d") &&
         !vars.hasStarted)
     {
+        print("[START] Timer started - map: '" + current.mapName + "'");
         vars.hasStarted = true;
         vars.hasSplit = false;
         return true;
+    }
+    
+    if (settings["autostart"] && current.gameState == 1 && old.gameState != 1)
+    {
+        print("[START] Checked start - gameState changed, map: '" + current.mapName + "', hasStarted: " + vars.hasStarted);
     }
 }
 
@@ -101,8 +110,14 @@ split
         old.levelEndSoundPlayed == 0 &&
         !vars.hasSplit)
     {
+        print("[SPLIT] Level end sound - splitting");
         vars.hasSplit = true;
         return true;
+    }
+    
+    if (settings["autosplit"] && current.levelEndSoundPlayed != 0 && old.levelEndSoundPlayed == 0)
+    {
+        print("[SPLIT] Level end sound detected but hasSplit already true");
     }
 }
 
