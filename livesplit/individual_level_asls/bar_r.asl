@@ -72,7 +72,7 @@ startup
     vars.hasSplit = false;
     vars.gameReady = false;
     
-    print("[STARTUP] IL mode");
+    print("[STARTUP] IL mode initialized");
 }
 
 init
@@ -86,9 +86,6 @@ init
 
 start
 {
-    if (!vars.gameReady)
-        return false;
-    
     // Start when: game state becomes 1 AND map is "bar_r"
     if (settings["autostart"] && 
         current.gameState == 1 && 
