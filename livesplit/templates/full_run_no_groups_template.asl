@@ -99,12 +99,3 @@ isLoading
     // No load time removal
     return false;
 }
-
-update
-{
-    // Display current progress for debugging
-    if (current.mapName != old.mapName)
-    {
-        print("Map changed to: " + current.mapName);
-    }
-}
