@@ -1,5 +1,16 @@
 state("FDNYFirefighter", "1.0")
-{  
+{
+    /*
+     * ==============================================================================
+     * FDNY FIREFIGHTER - FULL RUN AUTO SPLITTER TEMPLATE
+     * ==============================================================================
+     * 
+     * This template is used to generate full_run.asl with grouped splits.
+     * Groups require in-order completion, standalone maps can be any order.
+     * 
+     * Memory addresses match IL template for consistency.
+     */
+    
     int gameState : 0x00502AAC, 0x6F0;
     string10 mapName : 0x00502AAC, 0x688, 0x0, 0xC;
     int totalVictims : 0x00503A78, 0x30, 0x3528;
@@ -36,6 +47,8 @@ startup
     // Prevent double-triggers
     vars.hasStarted = false;
     vars.lastCompletedMap = "";
+    
+    print("[STARTUP] Tracking " + vars.mapGroups.Count + " groups, " + vars.standaloneMaps.Count + " standalone maps");
 }
 
 init
@@ -46,6 +59,7 @@ init
     vars.completedGroups.Clear();
     vars.groupProgress["{{GROUP_NAME_PLACEHOLDER}}"] = 0;
     vars.lastCompletedMap = "";
+    print("[INIT] Reset complete - all tracking cleared");
 }
 
 start
@@ -60,23 +74,34 @@ split
     if (current.levelEndSoundPlayed != 0 && 
         old.levelEndSoundPlayed == 0)
     {
+        print("[SOUND] Level end sound detected - raw mapName: '" + current.mapName + "'");
         string completedMap = current.mapName.ToLower().Trim();
+        print("[MAP] Processed map: '" + completedMap + "'");
         
         // Check if it's a standalone map
         if (vars.standaloneMaps.Contains(completedMap) && 
             !vars.completedStandalone.Contains(completedMap))
         {
+            print("[STANDALONE] Found in standalone list");
             // Prevent duplicate splits for same map
             if (completedMap == vars.lastCompletedMap)
+            {
+                print("[DUPLICATE] Blocked duplicate split for standalone: " + completedMap);
                 return false;
+            }
             
             vars.lastCompletedMap = completedMap;
             vars.completedStandalone.Add(completedMap);
             print("Completed standalone: " + completedMap);
             return true;
         }
+        else if (vars.standaloneMaps.Contains(completedMap))
+        {
+            print("[STANDALONE] Already completed: " + completedMap);
+        }
         
         // Check if it's part of a group
+        print("[GROUP] Checking groups for: " + completedMap);
         foreach (var group in vars.mapGroups)
         {
             string groupName = group.Key;
@@ -84,7 +109,10 @@ split
             
             // Skip if group already complete
             if (vars.completedGroups.Contains(groupName))
+            {
+                print("[GROUP] Skipping completed group: " + groupName);
                 continue;
+            }
             
             int currentProgress = vars.groupProgress[groupName];
             
@@ -92,9 +120,13 @@ split
             if (currentProgress < mapsInGroup.Count && 
                 completedMap == mapsInGroup[currentProgress])
             {
+                print("[GROUP] Map matches next in sequence for " + groupName);
                 // Prevent duplicate splits for same map
                 if (completedMap == vars.lastCompletedMap)
+                {
+                    print("[DUPLICATE] Blocked duplicate split for group map: " + completedMap);
                     return false;
+                }
                 
                 vars.lastCompletedMap = completedMap;
                 vars.groupProgress[groupName]++;
@@ -117,6 +149,8 @@ split
                 return false;
             }
         }
+        
+        print("[MAP] Not found in any standalone or group");
     }
     
     return false;
