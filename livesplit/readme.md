@@ -2,6 +2,8 @@
 
 Automated ASL file generation for FDNY Firefighter speedruns.
 
+I have no idea how to use LiveSplit or if the way I'm doing this is functional.  This will be updated as I continue.
+
 ## Quick Start - Editing in GitHub
 
 **To add/modify maps or change split behavior:**
