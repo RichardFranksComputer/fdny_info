@@ -4,6 +4,12 @@ Automated ASL file generation for FDNY Firefighter speedruns.
 
 I have no idea how to use LiveSplit or if the way I'm doing this is functional.  This will be updated as I continue.
 
+TODO:
+- Get full run working
+- Add IsLoading block to detect when in menu after level complete
+- Determine if audio complete register has a different value after each level
+- If not, determine flow for detecting level has ended
+
 ## Quick Start - Editing in GitHub
 
 **To add/modify maps or change split behavior:**
