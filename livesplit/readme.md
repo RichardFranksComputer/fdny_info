@@ -9,7 +9,8 @@ TODO:
 - Add IsLoading block to detect when in menu after level complete
 - Determine if audio complete register has a different value after each level
 - If not, determine flow for detecting level has ended
-- Look in genesis.dll to find how console messages are logged and see if it can be monitored
+- Look in genesis.dll to find how console messages are logged and see if it can be monitored --- this is geEngine_PrintF
+- [TChatterSet] Playing shuffled sound: RC_ResLvlWin 0
 
 ## Quick Start - Editing in GitHub
 
@@ -24,6 +25,8 @@ TODO:
 - `il_maplist.txt` - Add/remove individual level maps (one per line)
 - `full_run_maplist.txt` - Add/remove maps, modify groupings with `[GROUP:name]` markers
 - `templates/*.asl` - Modify ASL logic (use `{{MAP_NAME_PLACEHOLDER}}` and `{{GROUP_NAME_PLACEHOLDER}}`)
+
+![alt text](image.png)
 
 ## Generators
 
