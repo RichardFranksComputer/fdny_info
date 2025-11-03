@@ -6,7 +6,7 @@
       <Description>"gameState"</Description>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>4 Bytes</VariableType>
-      <Address>00502AAC</Address>
+      <Address>fdnyfirefighter.exe+0x00102AAC</Address>
       <Offsets>
         <Offset>6f0</Offset>
       </Offsets>
@@ -20,7 +20,7 @@
       <Unicode>0</Unicode>
       <CodePage>0</CodePage>
       <ZeroTerminate>1</ZeroTerminate>
-      <Address>0x00502aac</Address>
+      <Address>fdnyfirefighter.exe+0x00102AAC</Address>
       <Offsets>
         <Offset>c</Offset>
         <Offset>0</Offset>
@@ -32,7 +32,7 @@
       <Description>"totalVictims"</Description>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>4 Bytes</VariableType>
-      <Address>00503a78</Address>
+      <Address>fdnyfirefighter.exe+0x00103A78</Address>
       <Offsets>
         <Offset>3528</Offset>
         <Offset>30</Offset>
@@ -43,19 +43,117 @@
       <Description>"rescuedVictims"</Description>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>4 Bytes</VariableType>
-      <Address>00503a78</Address>
+      <Address>fdnyfirefighter.exe+0x00103A78</Address>
       <Offsets>
         <Offset>352c</Offset>
         <Offset>30</Offset>
       </Offsets>
     </CheatEntry>
     <CheatEntry>
-      <ID>16</ID>
-      <Description>"levelEndSoundPlayed"</Description>
+      <ID>48</ID>
+      <Description>"*bank_levelEndSoundPlayed_158"</Description>
       <ShowAsHex>1</ShowAsHex>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>4 Bytes</VariableType>
-      <Address>0x00503A78</Address>
+      <Address>fdnyfirefighter.exe+0x00103A78</Address>
+      <Offsets>
+        <Offset>0</Offset>
+        <Offset>158</Offset>
+        <Offset>0</Offset>
+        <Offset>8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>49</ID>
+      <Description>"*military_base_levelEndSoundPlayed_c8"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>fdnyfirefighter.exe+0x00103A78</Address>
+      <Offsets>
+        <Offset>0</Offset>
+        <Offset>c8</Offset>
+        <Offset>0</Offset>
+        <Offset>8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>25</ID>
+      <Description>"*bar_levelEndSoundPlayed_fc"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>fdnyfirefighter.exe+0x00103A78</Address>
+      <Offsets>
+        <Offset>0</Offset>
+        <Offset>fc</Offset>
+        <Offset>0</Offset>
+        <Offset>8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>50</ID>
+      <Description>"*boat_levelEndSoundPlayed_bc"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>fdnyfirefighter.exe+0x00103A78</Address>
+      <Offsets>
+        <Offset>0</Offset>
+        <Offset>bc</Offset>
+        <Offset>0</Offset>
+        <Offset>8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>22</ID>
+      <Description>"*gas_station_levelEndSoundPlayed_f0"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>fdnyfirefighter.exe+0x00103A78</Address>
+      <Offsets>
+        <Offset>0</Offset>
+        <Offset>f0</Offset>
+        <Offset>0</Offset>
+        <Offset>8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>11</ID>
+      <Description>"*oil_rig_d_levelEndSoundPlayed_c4"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>fdnyfirefighter.exe+0x00103A78</Address>
+      <Offsets>
+        <Offset>0</Offset>
+        <Offset>c4</Offset>
+        <Offset>0</Offset>
+        <Offset>8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>43</ID>
+      <Description>"*subway_levelEndSoundPlayed_144"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>fdnyfirefighter.exe+0x00103A78</Address>
+      <Offsets>
+        <Offset>0</Offset>
+        <Offset>144</Offset>
+        <Offset>0</Offset>
+        <Offset>8</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>27</ID>
+      <Description>"*training_levelEndSoundPlayed_104"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>fdnyfirefighter.exe+0x00103A78</Address>
       <Offsets>
         <Offset>0</Offset>
         <Offset>104</Offset>
