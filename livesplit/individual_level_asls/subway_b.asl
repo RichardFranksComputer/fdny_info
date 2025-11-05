@@ -113,17 +113,8 @@ split
 
 reset
 {
-    bool stateTransition = old.gameState == 0 && current.gameState == 1;
-    bool soundTransition = old.levelEndSoundPlayed != 0 && current.levelEndSoundPlayed == 0;
-    bool mapCheck = current.mapName.ToLower().Trim().Contains("subway_b");
-    
-    print(String.Format("[FDNY RESET] Checks - state:0→1={0} | sound:1→0={1} | map:match={2}",
-        stateTransition, soundTransition, mapCheck));
-    
-    if (stateTransition && soundTransition && mapCheck)
+    if (current.gameState == 0)
     {
-        print("[FDNY RESET] ✓✓✓ TIMER RESET");
-        vars.hasSplit = false;
         return true;
     }
     
