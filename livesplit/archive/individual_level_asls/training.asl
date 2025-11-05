@@ -113,7 +113,6 @@ split
 
 reset
 {
-    
     if (current.gameState == 0)
     {
         return true;
