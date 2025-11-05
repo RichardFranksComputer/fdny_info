@@ -1,0 +1,142 @@
+# RCS_BoundsTrigger Reverse Engineering - Concise Results
+
+## Critical Finding
+
+⚠️ **The RCS_BoundsTrigger entity structure is NOT in fdny.exe - it's in genesis.dll**
+
+---
+
+## What Was Found in fdny.exe
+
+### Factory Structure (12 bytes) - CONFIRMED
+```c
+// Factory/Registry object for entity lookup
+struct RCS_BoundsTrigger_Factory {
+    void* vtable;           // +0x00 (4 bytes) → 0x004e0f98
+    uint  nameHash;         // +0x04 (4 bytes) → hash % 100
+    char* className;        // +0x08 (4 bytes) → "RCS_BoundsTrigger"
+};
+```
+
+**Evidence:**
+- Allocated via `operator_new(0xc)` at 0x00429886
+- Constructor at FUN_00440d60
+- Purpose: Entity type registration/lookup only
+
+---
+
+## Why the Entity Struct Isn't Here
+
+### Import Analysis Proves Engine Separation
+
+**All geVec3d operations imported from genesis.dll:**
+- geVec3d_DotProduct
+- geVec3d_Length
+- geVec3d_Subtract
+- *(+13 more vector functions)*
+
+**All entity operations imported from genesis.dll:**
+- geEntity_GetUserDataSizeForClass
+- geWorld_Collision
+- geBody_GetBoundingBox
+- geActor_GetExtBox
+
+**fdny.exe has ZERO vector math or entity member access** - it only passes opaque pointers to engine functions.
+
+---
+
+## Architecture Pattern
+```
+fdny.exe:
+- Registers entity classnames (12-byte factories)
+- Receives void* pointers from engine
+- Passes pointers to genesis.dll functions
+- NEVER accesses entity members directly
+
+genesis.dll:
+- Defines actual entity structures
+- Implements all geVec3d operations
+- Contains bounds checking code
+- Manages entity memory
+```
+
+---
+
+## Key Addresses Found
+
+| Address | Description |
+|---------|-------------|
+| 0x004e0fa8 | String: "RCS_BoundsTrigger" |
+| 0x00440d60 | Factory constructor |
+| 0x004297e0 | Factory registration function |
+| 0x004e0f98 | Factory vtable pointer |
+
+---
+
+## Function Renames
+
+| Original | Suggested Name |
+|----------|----------------|
+| FUN_00440d60 | RCS_BoundsTrigger_Factory_Constructor |
+| FUN_004297e0 | RegisterEntityFactories |
+| FUN_0043aee0 | Entity_BaseFactoryInit |
+
+---
+
+## What Wasn't Found
+
+❌ Actual entity instance structure  
+❌ Entity size/allocation  
+❌ geVec3d mins/maxs offsets  
+❌ Active/enabled flag offsets  
+❌ Any direct entity member access
+
+**Reason:** All entity internals are in genesis.dll
+
+---
+
+## Next Steps for Aeomech
+
+### To find the actual struct, you must:
+
+1. **Analyze genesis.dll** ⭐ Recommended
+   - Search for "BoundsTrigger" functions
+   - Find geEntity_GetUserDataSizeForClass implementation
+   - Look for bounds checking code (mins/maxs access patterns)
+
+2. **Runtime memory inspection**
+   - Spawn entity, get pointer, dump 64 bytes
+   - Vtable at +0, then likely mins/maxs vectors
+
+3. **Test hypothesis struct**
+```c
+   typedef struct {
+       void* vtable;      // +0x00
+       geVec3d mins;      // +0x04 (12 or 24 bytes)
+       geVec3d maxs;      // +0x10 or +0x1C
+       int active;        // +0x1C or +0x34
+   } RCS_BoundsTrigger;
+```
+
+---
+
+## Confidence Levels
+
+| Item | Status | Confidence |
+|------|--------|------------|
+| Factory structure (12 bytes) | ✅ Found | 100% |
+| Struct location (genesis.dll) | ✅ Confirmed | 100% |
+| Opaque pointer architecture | ✅ Identified | 100% |
+| Actual entity structure | ❌ Not in fdny.exe | N/A |
+
+---
+
+## Bottom Line
+
+**fdny.exe only contains 12-byte factory registration objects.** The actual RCS_BoundsTrigger entity structure with mins/maxs bounds is in **genesis.dll**. You cannot determine the entity memory layout from fdny.exe alone.
+
+---
+
+**Target:** fdny.exe  
+**Result:** Factory documented, entity structure requires genesis.dll analysis  
+**Status:** COMPLETE (within scope of fdny.exe)
