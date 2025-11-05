@@ -1,4 +1,5 @@
 // this should be all values needed to make a livesplit
+//
 // map splits to use if/then for "if map name is x, split when sound value is non-zero
 // subplits may be possible for map stages and victim counts for each
 //
