@@ -8,13 +8,8 @@
  * 2. Set your layout to display "Game Time" (not Real Time)
  * 3. Monitor debug output in DebugView++ (https://github.com/CobaltFusion/DebugViewPP)
  * 
- * FEATURES:
- * - Auto-start when entering any level
- * - Splits on level completion (sound triggers or map transitions)
- * - Pauses Game Time between levels (excludes menu/loading time)
- * - Supports all single-stage and multi-stage maps
- * - Properly handles direct map transitions (no menu) in multi-stage levels
- * 
+ * Resets any time gameState is 0 (game in menu)
+ * INTENDED FOR IL RUNS ONLY
  * ==============================================================================
  */
 
@@ -254,12 +249,6 @@ split
         return true;
     }
     
-    return false;
-}
-
-reset
-{
-    // No auto-reset (manual reset only)
     return false;
 }
 
