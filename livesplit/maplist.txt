@@ -1,16 +1,13 @@
 bank
 bar_r
-[GROUP:boat]
 boat_a
 boat_b
 gas_r
 mbase
-[GROUP:oil_rig]
 oil_rig_a
 oil_rig_b
 oil_rig_c
 oil_rig_d
-[GROUP:subway]
 subway_a
 subway_b
 training
