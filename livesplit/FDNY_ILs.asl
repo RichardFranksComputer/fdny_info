@@ -1,13 +1,7 @@
 /*
  * ==============================================================================
- * FDNY FIREFIGHTER - AUTO SPLITTER (ALL MAPS)
+ * FDNY FIREFIGHTER - IL AUTO SPLITTER (ALL RESCUE MAPS)
  * ==============================================================================
- * 
- * SETUP INSTRUCTIONS:
- * 1. Load this script in LiveSplit via Edit Splits → Settings → Browse
- * 2. Set your layout to display "Game Time" (not Real Time)
- * 3. Monitor debug output in DebugView++ (https://github.com/CobaltFusion/DebugViewPP)
- * 
  * Resets any time gameState is 0 (game in menu)
  * INTENDED FOR IL RUNS ONLY
  * ==============================================================================
@@ -57,15 +51,15 @@ update
 {
     vars.frameCount++;
     
-    string currentMapLower = current.mapName.ToLower().Trim();
-    
-    // Heartbeat every 60 frames (~1 second)
-    if (vars.frameCount % 60 == 0)
+    vars.currentMap = current.mapName.ToLower().Trim();
+
+    // Heartbeat every 300 frames (~5 seconds)
+    if (vars.frameCount % 300 == 0)
     {
         print(String.Format("[FDNY] Frame:{0} | State:{1} | Map:'{2}' | Split:{3} | LastMap:'{4}'",
             vars.frameCount,
             current.gameState,
-            currentMapLower,
+            vars.currentMap,
             vars.hasSplit,
             vars.lastMap));
     }
@@ -73,19 +67,19 @@ update
     // Reset split flag when entering gameplay from menu (0→1)
     if (old.gameState == 0 && current.gameState == 1)
     {
-        print(String.Format("[FDNY] Menu→Gameplay | Map:'{0}' | RESET split flag", currentMapLower));
+        print(String.Format("[FDNY] Menu→Gameplay | Map:'{0}' | RESET split flag", vars.currentMap));
         vars.hasSplit = false;
-        vars.lastMap = currentMapLower;
+        vars.lastMap = vars.currentMap;
     }
     
     // Reset split flag when map changes DURING gameplay (multi-stage direct transitions)
     // This happens AFTER the split has been processed
-    if (current.gameState == 1 && vars.hasSplit && vars.lastMap != "" && vars.lastMap != currentMapLower)
+    if (current.gameState == 1 && vars.hasSplit && vars.lastMap != "" && vars.lastMap != vars.currentMap)
     {
         print(String.Format("[FDNY] Map transition completed '{0}'→'{1}' | RESET split flag, RESUME timer", 
-            vars.lastMap, currentMapLower));
+            vars.lastMap, vars.currentMap));
         vars.hasSplit = false;
-        vars.lastMap = currentMapLower;
+        vars.lastMap = vars.currentMap;
     }
 }
 
@@ -94,11 +88,10 @@ start
     // Start when in gameplay state
     if (current.gameState == 1)
     {
-        string currentMap = current.mapName.ToLower().Trim();
-        print(String.Format("[FDNY START] ✓✓✓ TIMER STARTED ✓✓✓ | Map:'{0}'", currentMap));
+        print(String.Format("[FDNY START] TIMER STARTED | Map:'{0}'", vars.currentMap));
         
         vars.hasSplit = false;
-        vars.lastMap = currentMap;
+        vars.lastMap = vars.currentMap;
         vars.frameCount = 0;
         
         return true;
@@ -109,18 +102,9 @@ start
 
 split
 {
-    // Guard: Only split during gameplay and if we haven't already split
+    // Only split during gameplay and if we haven't already split
     if (current.gameState != 1 || vars.hasSplit)
         return false;
-    
-    string currentMap = current.mapName.ToLower().Trim();
-    
-    // Initialize lastMap if empty (shouldn't happen, but safety check)
-    if (vars.lastMap == "")
-    {
-        vars.lastMap = currentMap;
-        return false;
-    }
     
     // ============================================================================
     // MAP TRANSITION SPLITS (Multi-stage levels)
@@ -128,123 +112,111 @@ split
     // Note: lastMap is NOT updated here - update block handles it after transition
     // ============================================================================
     
-    // BOAT: A→B
-    if (vars.lastMap.Contains("boat_a") && currentMap.Contains("boat_b"))
+    if (vars.lastMap.Contains("boat_a") && vars.currentMap.Contains("boat_b"))
     {
-        print(String.Format("[FDNY SPLIT] ✓✓✓ Boat A→B | '{0}'→'{1}'", vars.lastMap, currentMap));
-        vars.hasSplit = true;
-        // Don't update lastMap - let update block handle it when map stabilizes
-        return true;
-    }
-    
-    // SUBWAY: A→B
-    if (vars.lastMap.Contains("subway_a") && currentMap.Contains("subway_b"))
-    {
-        print(String.Format("[FDNY SPLIT] ✓✓✓ Subway A→B | '{0}'→'{1}'", vars.lastMap, currentMap));
+        print(String.Format("[FDNY SPLIT] Boat A→B | '{0}'→'{1}'", vars.lastMap, vars.currentMap));
         vars.hasSplit = true;
         return true;
     }
     
-    // OIL RIG: A→B
-    if (vars.lastMap.Contains("oil_rig_a") && currentMap.Contains("oil_rig_b"))
+    if (vars.lastMap.Contains("subway_a") && vars.currentMap.Contains("subway_b"))
     {
-        print(String.Format("[FDNY SPLIT] ✓✓✓ Oil Rig A→B | '{0}'→'{1}'", vars.lastMap, currentMap));
+        print(String.Format("[FDNY SPLIT] Subway A→B | '{0}'→'{1}'", vars.lastMap, vars.currentMap));
         vars.hasSplit = true;
         return true;
     }
     
-    // OIL RIG: B→C
-    if (vars.lastMap.Contains("oil_rig_b") && currentMap.Contains("oil_rig_c"))
+    if (vars.lastMap.Contains("oil_rig_a") && vars.currentMap.Contains("oil_rig_b"))
     {
-        print(String.Format("[FDNY SPLIT] ✓✓✓ Oil Rig B→C | '{0}'→'{1}'", vars.lastMap, currentMap));
+        print(String.Format("[FDNY SPLIT] Oil Rig A→B | '{0}'→'{1}'", vars.lastMap, vars.currentMap));
         vars.hasSplit = true;
         return true;
     }
     
-    // OIL RIG: C→D
-    if (vars.lastMap.Contains("oil_rig_c") && currentMap.Contains("oil_rig_d"))
+    if (vars.lastMap.Contains("oil_rig_b") && vars.currentMap.Contains("oil_rig_c"))
     {
-        print(String.Format("[FDNY SPLIT] ✓✓✓ Oil Rig C→D | '{0}'→'{1}'", vars.lastMap, currentMap));
+        print(String.Format("[FDNY SPLIT] Oil Rig B→C | '{0}'→'{1}'", vars.lastMap, vars.currentMap));
+        vars.hasSplit = true;
+        return true;
+    }
+    
+    if (vars.lastMap.Contains("oil_rig_c") && vars.currentMap.Contains("oil_rig_d"))
+    {
+        print(String.Format("[FDNY SPLIT] Oil Rig C→D | '{0}'→'{1}'", vars.lastMap, vars.currentMap));
         vars.hasSplit = true;
         return true;
     }
     
     // ============================================================================
     // SINGLE-STAGE MAPS - Sound triggers
+    // Each map has a corresponding memory address to monitor for EndSoundPlayed condition
     // ============================================================================
     
-    // Training
-    if (currentMap.Contains("training") && 
+    if (vars.currentMap.Contains("training") && 
         old.trainingLevelEndSoundPlayed == 0 && current.trainingLevelEndSoundPlayed != 0)
     {
-        print("[FDNY SPLIT] ✓✓✓ Training completed");
+        print("[FDNY SPLIT] Training completed");
         vars.hasSplit = true;
         return true;
     }
     
-    // Bank
-    if (currentMap.Contains("bank") && 
+    if (vars.currentMap.Contains("bank") && 
         old.bankLevelEndSoundPlayed == 0 && current.bankLevelEndSoundPlayed != 0)
     {
-        print("[FDNY SPLIT] ✓✓✓ Bank completed");
+        print("[FDNY SPLIT] Bank completed");
         vars.hasSplit = true;
         return true;
     }
     
-    // Bar
-    if (currentMap.Contains("bar_r") && 
+    if (vars.currentMap.Contains("bar_r") && 
         old.barLevelEndSoundPlayed == 0 && current.barLevelEndSoundPlayed != 0)
     {
-        print("[FDNY SPLIT] ✓✓✓ Bar completed");
+        print("[FDNY SPLIT] Bar completed");
         vars.hasSplit = true;
         return true;
     }
     
-    // Gas Station
-    if (currentMap.Contains("gas_r") && 
+    if (vars.currentMap.Contains("gas_r") && 
         old.gasStationLevelEndSoundPlayed == 0 && current.gasStationLevelEndSoundPlayed != 0)
     {
-        print("[FDNY SPLIT] ✓✓✓ Gas Station completed");
+        print("[FDNY SPLIT] Gas Station completed");
         vars.hasSplit = true;
         return true;
     }
     
-    // Military Base
-    if (currentMap.Contains("mbase") && 
+    if (vars.currentMap.Contains("mbase") && 
         old.militaryBaseLevelEndSoundPlayed == 0 && current.militaryBaseLevelEndSoundPlayed != 0)
     {
-        print("[FDNY SPLIT] ✓✓✓ Military Base completed");
+        print("[FDNY SPLIT] Military Base completed");
         vars.hasSplit = true;
         return true;
     }
     
     // ============================================================================
     // MULTI-STAGE FINAL COMPLETIONS - Sound triggers
+    // Final stages of multi-stage levels will are split when their end sound plays
     // ============================================================================
     
-    // Boat B (final)
-    if (currentMap.Contains("boat_b") && 
+    if (vars.currentMap.Contains("boat_b") && 
         old.boatLevelEndSoundPlayed == 0 && current.boatLevelEndSoundPlayed != 0)
     {
-        print("[FDNY SPLIT] ✓✓✓ Boat B completed");
+        print("[FDNY SPLIT] Boat B completed");
         vars.hasSplit = true;
         return true;
     }
     
-    // Subway B (final)
-    if (currentMap.Contains("subway_b") && 
+    if (vars.currentMap.Contains("subway_b") && 
         old.subwayLevelEndSoundPlayed == 0 && current.subwayLevelEndSoundPlayed != 0)
     {
-        print("[FDNY SPLIT] ✓✓✓ Subway B completed");
+        print("[FDNY SPLIT] Subway B completed");
         vars.hasSplit = true;
         return true;
     }
     
-    // Oil Rig D (final)
-    if (currentMap.Contains("oil_rig_d") && 
+    if (vars.currentMap.Contains("oil_rig_d") && 
         old.oilRigDLevelEndSoundPlayed == 0 && current.oilRigDLevelEndSoundPlayed != 0)
     {
-        print("[FDNY SPLIT] ✓✓✓ Oil Rig D completed");
+        print("[FDNY SPLIT] Oil Rig D completed");
         vars.hasSplit = true;
         return true;
     }
@@ -254,12 +226,9 @@ split
 
 isLoading
 {
-    // Pause Game Time when:
-    // 1. We've split (excludes menu/loading time between levels)
-    // 2. gameState is 2 (loading) or 3 (win screen)
-    // Timer resumes when:
-    // - Entering next level from menu (update: gameState 0→1)
-    // - Map transition completes during gameplay (update: map change while hasSplit=true)
+    // hasSplit = true occurs after levelEndSoundPlayed (single stage levels)
+    // current.gamestate 2 occurs during loading (intermediary stages of multistage maps)
+    // current.gamestate 3 during victory 
     return vars.hasSplit || current.gameState == 2 || current.gameState == 3;
 }
 
@@ -270,6 +239,5 @@ reset
         print("[FDNY RESET] ✓ Returned to menu");
         return true;
     }
-    
     return false;
 }
