@@ -68,6 +68,17 @@
       </Offsets>
     </CheatEntry>
     <CheatEntry>
+      <ID>18</ID>
+      <Description>"coordZ_with_cam_offset"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Float</VariableType>
+      <Address>FDNYFirefighter.exe+00103A78</Address>
+      <Offsets>
+        <Offset>34d0</Offset>
+        <Offset>30</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
       <ID>6</ID>
       <Description>"timer?"</Description>
       <ShowAsSigned>0</ShowAsSigned>
@@ -146,17 +157,49 @@
     </CheatEntry>
     <CheatEntry>
       <ID>14</ID>
-      <Description>"gravityNormal"</Description>
+      <Description>"y_offset_stand"</Description>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>Float</VariableType>
       <Address>FDNYFireFighter.exe+00E1824</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>15</ID>
-      <Description>"gravitySpecial"</Description>
+      <Description>"y_offset_crouch"</Description>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>Float</VariableType>
       <Address>FDNYFireFighter.exe+00E1828</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>16</ID>
+      <Description>"player base pointer"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>FDNYFireFighter.exe+00103a78</Address>
+      <Offsets>
+        <Offset>30</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>20</ID>
+      <Description>"x_collision_center"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Float</VariableType>
+      <Address>genesis.dll+362eec</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>21</ID>
+      <Description>"y_collision_center"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Float</VariableType>
+      <Address>genesis.dll+362ee4</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>19</ID>
+      <Description>"z_collision_center"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Float</VariableType>
+      <Address>genesis.dll+362ee8</Address>
     </CheatEntry>
   </CheatEntries>
   <UserdefinedSymbols/>
