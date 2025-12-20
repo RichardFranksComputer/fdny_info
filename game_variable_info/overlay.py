@@ -324,7 +324,7 @@ class Overlay(tk.Tk):
                         vy = self.velocity_cache.get("y")
                         if vx is not None and vy is not None:
                             import math
-                            speed = math.sqrt(abs(vx)**2 + abs(vy)**2)
+                            speed = math.sqrt(abs(vx)**2 + abs(vy)**2)  # shout out to nyddesson for the original idea on this
                             lbl.config(text=f"{w['label']}: {speed:.3f}")
                         else:
                             lbl.config(text=f"{w['label']}: <wait>")
