@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Run version="1.7.0">
+  <GameIcon />
+  <GameName>F.D.N.Y. Firefighter</GameName>
+  <CategoryName>Rescue%</CategoryName>
+  <LayoutPath></LayoutPath>
+  <Metadata>
+    <Run id="" />
+    <Platform usesEmulator="False"></Platform>
+    <Region></Region>
+    <Variables />
+    <CustomVariables />
+  </Metadata>
+  <Offset>00:00:00</Offset>
+  <AttemptCount>0</AttemptCount>
+  <AttemptHistory />
+  <Segments>
+
+    <!-- BANK ROBBERY (5 survivor subsplits + final bank exit) -->
+    <Segment>
+      <Name>- bank survivor 1</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>- bank survivor 2</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>- bank survivor 3</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>- bank survivor 4</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>- bank survivor 5</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>bank</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+
+    <!-- DOWNTOWN BAR (5 survivor subsplits + final bar_r exit) -->
+    <Segment>
+      <Name>- bar_r survivor 1</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>- bar_r survivor 2</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>- bar_r survivor 3</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>- bar_r survivor 4</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>- bar_r survivor 5</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>bar_r</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+
+    <!-- BOAT (multi-stage, no subsplits) -->
+    <Segment>
+      <Name>boat_a</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>boat_b</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+
+    <!-- GAS STATION (6 survivor subsplits + final gas_r exit) -->
+    <Segment>
+      <Name>- gas_r survivor 1</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>- gas_r survivor 2</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>- gas_r survivor 3</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>- gas_r survivor 4</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>- gas_r survivor 5</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>- gas_r survivor 6</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>gas_r</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+
+    <!-- MILITARY BASE (4 survivor subsplits + final mbase exit) -->
+    <Segment>
+      <Name>- mbase survivor 1</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>- mbase survivor 2</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>- mbase survivor 3</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>- mbase survivor 4</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>mbase</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+
+    <!-- OIL RIG (multi-stage, no subsplits) -->
+    <Segment>
+      <Name>oil_rig_a</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>oil_rig_b</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>oil_rig_c</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>oil_rig_d</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+
+    <!-- SUBWAY (multi-stage, no subsplits) -->
+    <Segment>
+      <Name>subway_a</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+    <Segment>
+      <Name>subway_b</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+
+    <!-- TRAINING -->
+    <Segment>
+      <Name>training</Name>
+      <Icon />
+      <SplitTimes><SplitTime name="Personal Best" /></SplitTimes>
+      <BestSegmentTime /><SegmentHistory />
+    </Segment>
+
+  </Segments>
+  <AutoSplitterSettings />
+</Run>
