@@ -289,8 +289,21 @@ class Overlay(tk.Tk):
         self.hwnd = None
         try:
             self.hwnd = ctypes.windll.user32.GetParent(self.winfo_id())
+            # overrideredirect() gives the window an owner, which normally hides
+            # it from the taskbar. Force a taskbar button anyway so it can be
+            # closed without Task Manager.
+            self.title("FDNY Overlay")
+            WS_EX_APPWINDOW = 0x00040000
+            WS_EX_TOOLWINDOW = 0x00000080
+            style = ctypes.windll.user32.GetWindowLongW(self.hwnd, -20)
+            style = (style | WS_EX_APPWINDOW) & ~WS_EX_TOOLWINDOW
+            ctypes.windll.user32.SetWindowLongW(self.hwnd, -20, style)
         except Exception as e:
             print(f"Warning: Could not get window handle: {e}")
+
+        # Let taskbar "Close window" (or a taskbar thumbnail's X) shut down
+        # cleanly instead of being ignored/hanging since there's no title bar.
+        self.protocol("WM_DELETE_WINDOW", self.destroy)
 
         # Bind mouse events for dragging
         self.bind("<Button-1>", self.start_drag)
