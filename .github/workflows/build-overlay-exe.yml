@@ -1,0 +1,33 @@
+name: Build Overlay Exe
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "overlay/overlay.py"
+      - "overlay/build.ps1"
+      - ".github/workflows/build-overlay-exe.yml"
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: overlay
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build exe
+        shell: pwsh
+        run: ./build.ps1
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FDNY_Overlay
+          path: overlay/dist/FDNY_Overlay.exe
+          if-no-files-found: error
