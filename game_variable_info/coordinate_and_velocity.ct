@@ -201,6 +201,13 @@
       <VariableType>Float</VariableType>
       <Address>genesis.dll+362ee8</Address>
     </CheatEntry>
+    <CheatEntry>
+      <ID>22</ID>
+      <Description>"frametime"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Float</VariableType>
+      <Address>FDNYFirefighter.exe+102B04</Address>
+    </CheatEntry>
   </CheatEntries>
   <UserdefinedSymbols/>
   <Comments>Info about this table:
