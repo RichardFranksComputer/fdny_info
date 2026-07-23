@@ -15,10 +15,14 @@ $ErrorActionPreference = "Stop"
 
 $ScriptDir  = Split-Path -Parent $MyInvocation.MyCommand.Path
 $SourceFile = Join-Path $ScriptDir "overlay.py"
+$ConfigFile = Join-Path $ScriptDir "overlay.ini"
 $AppName    = "FDNY_Overlay"
 
 if (-not (Test-Path $SourceFile)) {
     throw "Could not find overlay.py at $SourceFile"
+}
+if (-not (Test-Path $ConfigFile)) {
+    throw "Could not find overlay.ini at $ConfigFile"
 }
 
 # Ensure PyInstaller is installed
@@ -26,6 +30,12 @@ python -c "import PyInstaller" 2>$null
 if ($LASTEXITCODE -ne 0) {
     Write-Host "PyInstaller not found, installing..."
     python -m pip install --upgrade pyinstaller
+}
+
+Write-Host "Running tests..."
+python -m unittest discover -s "$ScriptDir\tests" -v
+if ($LASTEXITCODE -ne 0) {
+    throw "Tests failed - aborting build."
 }
 
 $WindowModeArg = if ($Console) { "--console" } else { "--noconsole" }
@@ -41,7 +51,11 @@ try {
         --specpath "$ScriptDir" `
         $SourceFile
 
-    Write-Host "`nBuild complete: $ScriptDir\dist\$AppName.exe"
+    # overlay.ini is read from next to the exe at runtime (not bundled inside
+    # the onefile package), so it must ship alongside it, not just in the repo.
+    Copy-Item -Path $ConfigFile -Destination "$ScriptDir\dist\overlay.ini" -Force
+
+    Write-Host "`nBuild complete: $ScriptDir\dist\$AppName.exe (+ overlay.ini)"
 }
 finally {
     Pop-Location

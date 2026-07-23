@@ -1,35 +1,132 @@
+import configparser
 import ctypes
+import os
 import struct
+import sys
 import time
 import tkinter as tk
+import tkinter.font as tkfont
 
 # =====================================================
 # CONFIG
 # =====================================================
+# All settings, including WATCHES, live in overlay.ini (see load_config()).
 
-PROCESS_NAME = "FDNYFirefighter.exe"
-REFRESH_MS = 33  # ~30 FPS
+_DEFAULT_GENERAL = {
+    "process_name": "FDNYFirefighter.exe",
+    "refresh_ms": 33,
+    "anchor_corner": "top-left",
+    "anchor_margin_x": 40,
+    "anchor_margin_y": 40,
+    "anchor_refresh_ms": 500,
+    "text_color": "0,255,0",  # matches the original hardcoded "lime"
+}
 
-# Corner of the game window to anchor the overlay to: "top-left", "top-right",
-# "bottom-left", or "bottom-right".
-ANCHOR_CORNER = "top-left"
-ANCHOR_MARGIN_X = 40  # pixels inward from the chosen corner, horizontally
-ANCHOR_MARGIN_Y = 40  # pixels inward from the chosen corner, vertically
-ANCHOR_REFRESH_MS = 500  # how often to re-sync to the game window's position/size
+def get_base_dir():
+    """Directory containing the running .exe (frozen) or this script."""
+    if getattr(sys, "frozen", False):
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(os.path.abspath(__file__))
 
-WATCHES = [
-    {"label": "Vel X", "module": "FDNYFirefighter.exe", "base": 0x00103A78, "offsets": [0x30, 0x104], "type": "float"},
-    {"label": "Vel Y", "module": "FDNYFirefighter.exe", "base": 0x00103A78, "offsets": [0x30, 0xFC], "type": "float"},
-    {"label": "Vel Z", "module": "FDNYFirefighter.exe", "base": 0x00103A78, "offsets": [0x30, 0x100], "type": "float"},
-    {"label": "Speed", "module": None, "base": None, "offsets": [], "calculated": True},
-    {"label": "Player State", "module": "FDNYFirefighter.exe", "base": 0x00103A78, "offsets": [0x30, 0x18c], "type": "byte"},
-    {"label": "Player Ground State", "module": "FDNYFirefighter.exe", "base": 0x00103A78, "offsets": [0x30, 0x12c], "type": "byte"},
-    {"label": "Z Collision Center", "module": "genesis.dll", "base": 0x362EE8, "offsets": [], "type": "float"},
-    {"label": "Z Ground Height", "module": "FDNYFirefighter.exe", "base": 0x00103A78, "offsets": [0x30, 0x3404], "type": "float"},
-    {"label": "Previous Jump", "module": None, "base": None, "offsets": [], "calculated": True},
-    {"label": "Previous Jump Max", "module": None, "base": None, "offsets": [], "calculated": True},
-    {"label": "Current Jump Max", "module": None, "base": None, "offsets": [], "calculated": True},
-]
+CONFIG_PATH = os.path.join(get_base_dir(), "overlay.ini")
+
+def parse_int(value):
+    """Parse a decimal or 0x-prefixed hex string, e.g. '40' or '0x00103A78'."""
+    return int(value.strip(), 0)
+
+def parse_rgb_to_hex(value):
+    """Parse an 'R,G,B' string (each 0-255) into a Tk '#rrggbb' color."""
+    parts = [p.strip() for p in value.split(",")]
+    if len(parts) != 3:
+        raise ValueError(f"expected 'R,G,B', got {value!r}")
+    r, g, b = (int(p) for p in parts)
+    for component in (r, g, b):
+        if not 0 <= component <= 255:
+            raise ValueError(f"RGB components must be 0-255, got {value!r}")
+    return f"#{r:02x}{g:02x}{b:02x}"
+
+def blend_color(fg_hex, bg_hex, alpha):
+    """Blend fg over bg at alpha (0-1) - fakes translucency; Tk has no real alpha."""
+    fg = fg_hex.lstrip("#")
+    bg = bg_hex.lstrip("#")
+    fr, fg_, fb = int(fg[0:2], 16), int(fg[2:4], 16), int(fg[4:6], 16)
+    br, bg_, bb = int(bg[0:2], 16), int(bg[2:4], 16), int(bg[4:6], 16)
+    r = round(fr * alpha + br * (1 - alpha))
+    g = round(fg_ * alpha + bg_ * (1 - alpha))
+    b = round(fb * alpha + bb * (1 - alpha))
+    return f"#{r:02x}{g:02x}{b:02x}"
+
+def load_config(path=CONFIG_PATH):
+    """Load general settings + WATCHES from overlay.ini at `path`. Falls back to
+    defaults and skips bad [watch:...] sections rather than crashing.
+    Returns (general_dict, watches_list, warnings_list)."""
+    warnings = []
+    general = dict(_DEFAULT_GENERAL)
+    watches = []
+
+    parser = configparser.ConfigParser()
+    try:
+        read_ok = parser.read(path)
+    except configparser.Error as e:
+        warnings.append(f"could not parse {os.path.basename(path)}: {e}")
+        return general, watches, warnings
+
+    if not read_ok:
+        warnings.append(f"{os.path.basename(path)} not found - using built-in defaults")
+        return general, watches, warnings
+
+    if parser.has_section("general"):
+        g = parser["general"]
+        general["process_name"] = g.get("process_name", general["process_name"])
+        general["refresh_ms"] = g.getint("refresh_ms", fallback=general["refresh_ms"])
+        general["anchor_corner"] = g.get("anchor_corner", general["anchor_corner"])
+        general["anchor_margin_x"] = g.getint("anchor_margin_x", fallback=general["anchor_margin_x"])
+        general["anchor_margin_y"] = g.getint("anchor_margin_y", fallback=general["anchor_margin_y"])
+        general["anchor_refresh_ms"] = g.getint("anchor_refresh_ms", fallback=general["anchor_refresh_ms"])
+        general["text_color"] = g.get("text_color", general["text_color"])
+
+    for section in parser.sections():
+        if not section.startswith("watch:"):
+            continue
+        label = section[len("watch:"):]
+        s = parser[section]
+        try:
+            if s.getboolean("calculated", fallback=False):
+                watches.append({"label": label, "module": None, "base": None, "offsets": [], "calculated": True})
+                continue
+
+            module = s.get("module")
+            base = parse_int(s.get("base"))
+            offsets_raw = s.get("offsets", "").strip()
+            offsets = [parse_int(o) for o in offsets_raw.split(",") if o.strip()] if offsets_raw else []
+            value_type = s.get("type", "float")
+
+            watches.append({
+                "label": label,
+                "module": module,
+                "base": base,
+                "offsets": offsets,
+                "type": value_type,
+            })
+        except Exception as e:
+            warnings.append(f"skipped watch '{label}': {e}")
+
+    return general, watches, warnings
+
+CONFIG_GENERAL, WATCHES, CONFIG_WARNINGS = load_config()
+
+PROCESS_NAME = CONFIG_GENERAL["process_name"]
+REFRESH_MS = CONFIG_GENERAL["refresh_ms"]
+ANCHOR_CORNER = CONFIG_GENERAL["anchor_corner"]
+ANCHOR_MARGIN_X = CONFIG_GENERAL["anchor_margin_x"]
+ANCHOR_MARGIN_Y = CONFIG_GENERAL["anchor_margin_y"]
+ANCHOR_REFRESH_MS = CONFIG_GENERAL["anchor_refresh_ms"]
+
+try:
+    TEXT_COLOR = parse_rgb_to_hex(CONFIG_GENERAL["text_color"])
+except ValueError as e:
+    CONFIG_WARNINGS.append(f"invalid text_color {CONFIG_GENERAL['text_color']!r}: {e}; using default")
+    TEXT_COLOR = parse_rgb_to_hex(_DEFAULT_GENERAL["text_color"])
 
 # =====================================================
 # WIN32 TYPES
@@ -111,6 +208,17 @@ def get_pid(name):
 
 def open_process(pid):
     return kernel32.OpenProcess(PROCESS_ACCESS, False, pid)
+
+STILL_ACTIVE = 259
+
+def is_process_alive(proc):
+    """Return True if proc is a handle to a still-running process."""
+    if not proc:
+        return False
+    exit_code = DWORD()
+    if not kernel32.GetExitCodeProcess(proc, ctypes.byref(exit_code)):
+        return False
+    return exit_code.value == STILL_ACTIVE
 
 def get_window_rect(hwnd):
     """Return (left, top, right, bottom) screen coords for a window, or None."""
@@ -255,22 +363,120 @@ def resolve_pointer_chain(proc, base_addr, offsets):
     return addr
 
 # =====================================================
+# PROCESS CONNECTION STATE MACHINE
+# =====================================================
+
+class ProcessConnection:
+    """
+    Tracks attaching to `process_name` and automatically re-attaching if the
+    process exits and is relaunched later. All OS calls are injected with
+    defaults so this can be unit tested without Windows or a GUI.
+
+    States:
+      SEARCHING - no live handle; poll() looks for the process at most once
+                  per search_interval.
+      ATTACHED  - holds an open handle; poll() checks whether it has died.
+    """
+
+    SEARCHING = "searching"
+    ATTACHED = "attached"
+
+    def __init__(self, process_name, search_interval=1.0, max_open_attempts=5,
+                 get_pid_fn=get_pid, open_process_fn=open_process,
+                 is_alive_fn=is_process_alive, close_handle_fn=kernel32.CloseHandle,
+                 clock=time.monotonic):
+        self.process_name = process_name
+        self.search_interval = search_interval
+        self.max_open_attempts = max_open_attempts
+        self._get_pid = get_pid_fn
+        self._open_process = open_process_fn
+        self._is_alive = is_alive_fn
+        self._close_handle = close_handle_fn
+        self._clock = clock
+
+        self.state = self.SEARCHING
+        self.pid = None
+        self.proc = None
+        self.attach_count = 0  # incremented on each successful attach
+        self.status = f"process {process_name}\nnot found"
+        self._next_search_time = 0.0  # search immediately on first poll()
+
+    def poll(self):
+        """Call on any cadence; internally throttles searching to
+        search_interval and does nothing while already attached and alive."""
+        if self.state == self.ATTACHED:
+            if not self._is_alive(self.proc):
+                self._detach()
+        else:
+            self._maybe_search()
+
+    def _maybe_search(self):
+        now = self._clock()
+        if now < self._next_search_time:
+            return
+        self._next_search_time = now + self.search_interval
+        self._attempt_attach()
+
+    def _attempt_attach(self):
+        pid = self._get_pid(self.process_name)
+        if not pid:
+            self.status = f"process {self.process_name}\nnot found"
+            return
+
+        for _ in range(self.max_open_attempts):
+            proc = self._open_process(pid)
+            if proc:
+                self.pid = pid
+                self.proc = proc
+                self.state = self.ATTACHED
+                self.attach_count += 1
+                self.status = None
+                return
+        self.status = f"unable to open pid of\n{self.process_name}"
+
+    def _detach(self):
+        if self.proc:
+            try:
+                self._close_handle(self.proc)
+            except Exception:
+                pass
+        self.proc = None
+        self.pid = None
+        self.state = self.SEARCHING
+        self.status = f"process {self.process_name}\nnot found"
+        self._next_search_time = 0.0  # search again immediately
+
+    def close(self):
+        """Release any held handle, e.g. on app shutdown."""
+        if self.proc:
+            try:
+                self._close_handle(self.proc)
+            except Exception:
+                pass
+            self.proc = None
+
+# =====================================================
 # GUI OVERLAY
 # =====================================================
 
 class Overlay(tk.Tk):
-    def __init__(self, proc, pid):
+    def __init__(self):
         super().__init__()
-        self.proc = proc
-        self.pid = pid
+        # Owns attaching/re-attaching to the game process; the overlay never
+        # needs a live process to start, and recovers if the game is closed
+        # and relaunched while the overlay keeps running.
+        self.connection = ProcessConnection(PROCESS_NAME)
+        self._attach_generation = 0  # last connection.attach_count we reset caches for
+
         self.overrideredirect(True)
         self.attributes("-topmost", True)
         self.attributes("-alpha", 0.55)
         self.configure(bg="black")
 
-        # Calculate dynamic height based on number of watches (25px per line)
-        num_lines = len(WATCHES)
+        # Calculate dynamic height: one status line plus one line per watch (25px each)
+        num_lines = len(WATCHES) + 1
         window_height = num_lines * 25
+        self._expanded_height = window_height
         self.geometry(f"300x{window_height}+40+40")
 
         # Dragging variables
@@ -282,39 +488,54 @@ class Overlay(tk.Tk):
         # of the anchor position so a drag persists across re-anchoring.
         self.anchor_dx = 0
         self.anchor_dy = 0
-        self.game_hwnd = find_main_window(self.pid)
+        self.game_hwnd = None  # looked up lazily once a pid is known
 
         # Click-through (will be disabled during drag)
         self.click_through_enabled = False
         self.hwnd = None
         try:
             self.hwnd = ctypes.windll.user32.GetParent(self.winfo_id())
-            # overrideredirect() gives the window an owner, which normally hides
-            # it from the taskbar. Force a taskbar button anyway so it can be
-            # closed without Task Manager.
-            self.title("FDNY Overlay")
-            WS_EX_APPWINDOW = 0x00040000
-            WS_EX_TOOLWINDOW = 0x00000080
-            style = ctypes.windll.user32.GetWindowLongW(self.hwnd, -20)
-            style = (style | WS_EX_APPWINDOW) & ~WS_EX_TOOLWINDOW
-            ctypes.windll.user32.SetWindowLongW(self.hwnd, -20, style)
         except Exception as e:
             print(f"Warning: Could not get window handle: {e}")
 
-        # Let taskbar "Close window" (or a taskbar thumbnail's X) shut down
-        # cleanly instead of being ignored/hanging since there's no title bar.
-        self.protocol("WM_DELETE_WINDOW", self.destroy)
+        self.protocol("WM_DELETE_WINDOW", self.on_close)
 
-        # Bind mouse events for dragging
+        # Right-click context menu, since there's no taskbar icon or title
+        # bar to close the overlay from.
+        self.context_menu = tk.Menu(self, tearoff=0)
+        self.context_menu.add_command(label="Close", command=self.on_close)
+
+        # Bind mouse events for dragging and the right-click menu
         self.bind("<Button-1>", self.start_drag)
         self.bind("<B1-Motion>", self.do_drag)
         self.bind("<ButtonRelease-1>", self.stop_drag)
 
+        # Squares sized to the font itself, no padding.
+        button_font = tkfont.Font(family="Consolas", size=12)
+        self.button_size = max(button_font.metrics("linespace"), button_font.measure("-"), button_font.measure("x"))
+
+        self.button_bar = tk.Frame(self, bg="black")
+        self.button_bar.pack(fill="x")
+        self.button_bar.bind("<Button-1>", self.start_drag)
+        self.button_bar.bind("<B1-Motion>", self.do_drag)
+        self.button_bar.bind("<ButtonRelease-1>", self.stop_drag)
+
+        self.minimize_btn = self._make_square_button(self.button_bar, "-", self.minimize_to_taskbar)
+        self.minimize_btn.pack(side="right")
+        self.close_btn = self._make_square_button(self.button_bar, "x", self.on_close)
+        self.close_btn.pack(side="right")
+
+        self.status_label = tk.Label(self, fg="yellow", bg="black", font=("Consolas", 12), anchor="w")
+        self.status_label.pack(anchor="w", fill="x")
+        self.status_label.bind("<Button-1>", self.start_drag)
+        self.status_label.bind("<B1-Motion>", self.do_drag)
+        self.status_label.bind("<ButtonRelease-1>", self.stop_drag)
+
         self.items = []
         for w in WATCHES:
-            lbl = tk.Label(self, fg="lime", bg="black", font=("Consolas", 12), anchor="w")
+            lbl = tk.Label(self, fg=TEXT_COLOR, bg="black", font=("Consolas", 12), anchor="w")
             lbl.pack(anchor="w", fill="x")
-            # Bind drag events to labels too
+            # Bind drag events and the right-click menu to labels too
             lbl.bind("<Button-1>", self.start_drag)
             lbl.bind("<B1-Motion>", self.do_drag)
             lbl.bind("<ButtonRelease-1>", self.stop_drag)
@@ -323,7 +544,7 @@ class Overlay(tk.Tk):
         # Cache for module bases and velocity values
         self.module_cache = {}
         self.velocity_cache = {"x": None, "y": None, "z": None}
-        
+
         # Jump height tracking
         self.z_collision_center = None
         self.z_ground_height = None
@@ -338,6 +559,43 @@ class Overlay(tk.Tk):
         # then keep re-syncing in case the game window moves or resizes.
         self.update_idletasks()
         self.apply_anchor()
+
+    def on_close(self):
+        """Release the process handle (if any) before tearing down the window."""
+        self.connection.close()
+        self.destroy()
+
+    def _make_square_button(self, parent, text, command):
+        """A tight, square canvas button. Tk has no real per-widget alpha, so
+        the border uses a 50% stipple dither (Tk's actual transparency trick)
+        instead of a flat blended color, which just looks like a solid shade."""
+        size = self.button_size
+        canvas = tk.Canvas(parent, width=size, height=size, bg="black", highlightthickness=0, bd=0)
+        canvas.create_rectangle(1, 1, size - 1, size - 1, outline=TEXT_COLOR, width=1, outlinestipple="gray50")
+        canvas.create_text(size // 2, size // 2, text=text, fill=TEXT_COLOR, font=("Consolas", 12))
+
+        def _on_click(event):
+            command()
+            return "break"  # don't also let the toplevel's drag binding fire
+
+        canvas.bind("<Button-1>", _on_click)
+        return canvas
+
+    def minimize_to_taskbar(self):
+        """overrideredirect windows aren't WM-managed, so a real taskbar
+        button (and restore) doesn't work while it's set. Drop it before
+        iconifying; update_loop restores it once the window is normal again."""
+        self.overrideredirect(False)
+        self.iconify()
+
+    def _restore_from_taskbar(self):
+        self.overrideredirect(True)
+        self.attributes("-topmost", True)
+        self.attributes("-alpha", 0.55)
+        try:
+            self.hwnd = ctypes.windll.user32.GetParent(self.winfo_id())
+        except Exception as e:
+            print(f"Warning: Could not get window handle after restore: {e}")
 
     def start_drag(self, event):
         """Start dragging the window."""
@@ -389,7 +647,7 @@ class Overlay(tk.Tk):
         window, then reschedule itself. Skips while the user is dragging."""
         if not self.is_dragging:
             if self.game_hwnd is None or not user32.IsWindow(self.game_hwnd):
-                self.game_hwnd = find_main_window(self.pid)
+                self.game_hwnd = find_main_window(self.connection.pid)
 
             rect = get_window_rect(self.game_hwnd) if self.game_hwnd else None
             if rect:
@@ -417,13 +675,42 @@ class Overlay(tk.Tk):
     def get_cached_module_base(self, module_name):
         """Get module base with caching to reduce overhead."""
         if module_name not in self.module_cache:
-            base = get_module_base(self.proc, module_name)
+            base = get_module_base(self.connection.proc, module_name)
             if base:
                 self.module_cache[module_name] = base
             return base
         return self.module_cache[module_name]
 
+    def status_text(self, base_text):
+        """Prefix persistent config-load warnings onto a status message."""
+        if CONFIG_WARNINGS:
+            return " | ".join(CONFIG_WARNINGS) + " | " + base_text
+        return base_text
+
     def update_loop(self):
+        self.connection.poll()
+
+        if self.connection.state != ProcessConnection.ATTACHED:
+            self.status_label.config(text=self.status_text(self.connection.status or ""))
+            for lbl, w in self.items:
+                lbl.config(text=f"{w['label']}: --")
+            self.after(REFRESH_MS, self.update_loop)
+            return
+
+        # A new (re)attach happened since the last tick: cached addresses
+        # and the game window handle from the previous process instance are
+        # no longer valid.
+        if self.connection.attach_count != self._attach_generation:
+            self._attach_generation = self.connection.attach_count
+            self.module_cache = {}
+            self.velocity_cache = {"x": None, "y": None, "z": None}
+            self.z_collision_center = None
+            self.z_ground_height = None
+            self.jump_baseline = None
+            self.game_hwnd = None
+
+        self.status_label.config(text=self.status_text(f"Attached (PID {self.connection.pid})"))
+
         for lbl, w in self.items:
             try:
                 # Handle calculated values (like Speed)
@@ -456,14 +743,14 @@ class Overlay(tk.Tk):
                 
                 # Resolve pointer chain if offsets exist
                 if w.get("offsets"):
-                    addr = resolve_pointer_chain(self.proc, addr, w["offsets"])
+                    addr = resolve_pointer_chain(self.connection.proc, addr, w["offsets"])
                     if not addr:
                         lbl.config(text=f"{w['label']}: <ptr?>")
                         continue
-                
+
                 # Read the value based on its type
                 value_type = w.get("type", "float")
-                val = read_value(self.proc, addr, value_type)
+                val = read_value(self.connection.proc, addr, value_type)
                 if val is not None:
                     # Format based on type
                     if value_type in ["float", "double"]:
@@ -561,21 +848,8 @@ class Overlay(tk.Tk):
 # =====================================================
 
 if __name__ == "__main__":
-    pid = get_pid(PROCESS_NAME)
-    if not pid:
-        print(f"Process '{PROCESS_NAME}' not found")
-        time.sleep(2)
-        raise SystemExit
-    
-    proc = open_process(pid)
-    if not proc:
-        print("Failed to open process")
-        time.sleep(2)
-        raise SystemExit
-    
-    try:
-        print(f"Attached to process {PROCESS_NAME} (PID: {pid})")
-        print(f"System pointer size: {PTR_SIZE} bytes")
-        Overlay(proc, pid).mainloop()
-    finally:
-        kernel32.CloseHandle(proc)
+    print(f"System pointer size: {PTR_SIZE} bytes")
+    # Overlay owns the process connection lifecycle: it starts immediately,
+    # searches for PROCESS_NAME, attaches once found, and re-attaches if the
+    # game is closed and relaunched while the overlay keeps running.
+    Overlay().mainloop()

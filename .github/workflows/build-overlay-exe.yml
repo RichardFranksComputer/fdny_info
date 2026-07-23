@@ -5,7 +5,9 @@ on:
     branches: [main]
     paths:
       - "overlay/overlay.py"
+      - "overlay/overlay.ini"
       - "overlay/build.ps1"
+      - "overlay/tests/**"
       - ".github/workflows/build-overlay-exe.yml"
   workflow_dispatch: {}
 
@@ -29,5 +31,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: FDNY_Overlay
-          path: overlay/dist/FDNY_Overlay.exe
+          path: |
+            overlay/dist/FDNY_Overlay.exe
+            overlay/dist/overlay.ini
           if-no-files-found: error
