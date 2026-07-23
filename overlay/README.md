@@ -8,19 +8,27 @@ or
 
 if you have multiple installs
 
-Use the small `-`/`x` buttons in the top-right corner to collapse or close
-the overlay — there's no taskbar icon, so these (or the earlier right-click
-menu, if re-enabled) are the only way to close it without Task Manager.
+The overlay starts in the top-left of the screen; left-click-drag it
+anywhere you like. Use the small `-`/`x` buttons in the top-right corner to
+minimize or close it. It has a normal taskbar icon at all times, so you can
+also minimize/restore/close it from there like any other app.
 
 ## Settings (overlay.ini)
 
-All settings — including which memory values are shown and the text color
-(`text_color = R,G,B`, applies to everything except the status line) — live
+All settings — including which memory values are shown (the label for each
+one is free text purely for display; it has no effect on what's actually
+read), the text color
+(`text_color = R,G,B`, applies to everything except the status line), and
+the font size (`font_size`, the window resizes to fit automatically) — live
 in `overlay.ini`, next to `overlay.py` (or next to `FDNY_Overlay.exe` if
 you're running the built exe). Double-click it to open it in Notepad, edit a
 value, save, and restart the overlay. If the file is missing or a line can't
 be understood, the overlay still starts with built-in defaults and shows a
 warning instead of crashing.
+
+Watch values are shown in two columns (label on the left, value on the
+right, split down the middle) — labels that don't fit the column width are
+truncated with "…", values are not.
 
 ## Building a standalone .exe
 

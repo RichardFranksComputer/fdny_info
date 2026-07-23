@@ -1,7 +1,4 @@
-"""
-Tests for the color helpers used by the config-driven text_color setting and
-the minimize/close buttons' translucent-looking border.
-"""
+"""Tests for parse_rgb_to_hex, used by the config-driven text_color setting."""
 
 import os
 import sys
@@ -9,7 +6,7 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from overlay import parse_rgb_to_hex, blend_color
+from overlay import parse_rgb_to_hex
 
 
 class TestParseRgbToHex(unittest.TestCase):
@@ -34,17 +31,6 @@ class TestParseRgbToHex(unittest.TestCase):
     def test_non_numeric_component_raises(self):
         with self.assertRaises(ValueError):
             parse_rgb_to_hex("r,g,b")
-
-
-class TestBlendColor(unittest.TestCase):
-    def test_full_alpha_returns_fg(self):
-        self.assertEqual(blend_color("#00ff00", "#000000", 1.0), "#00ff00")
-
-    def test_zero_alpha_returns_bg(self):
-        self.assertEqual(blend_color("#00ff00", "#000000", 0.0), "#000000")
-
-    def test_half_alpha_blends_toward_bg(self):
-        self.assertEqual(blend_color("#00ff00", "#000000", 0.5), "#008000")
 
 
 if __name__ == "__main__":

@@ -60,16 +60,25 @@ class TestGeneralSection(unittest.TestCase):
             self.assertEqual(general["process_name"], "Foo.exe")
             self.assertEqual(general["refresh_ms"], 16)
             # untouched keys keep their defaults
-            self.assertEqual(general["anchor_corner"], _DEFAULT_GENERAL["anchor_corner"])
+            self.assertEqual(general["text_color"], _DEFAULT_GENERAL["text_color"])
             self.assertEqual(warnings, [])
         finally:
             os.unlink(path)
 
     def test_missing_general_section_uses_defaults(self):
-        path = write_ini("[watch:Speed]\ncalculated = true\n")
+        path = write_ini("[watch:Speed]\ncalculated = speed\n")
         try:
             general, _, _ = load_config(path)
             self.assertEqual(general, _DEFAULT_GENERAL)
+        finally:
+            os.unlink(path)
+
+    def test_font_size_override(self):
+        path = write_ini("[general]\nfont_size = 20\n")
+        try:
+            general, _, warnings = load_config(path)
+            self.assertEqual(general["font_size"], 20)
+            self.assertEqual(warnings, [])
         finally:
             os.unlink(path)
 
@@ -92,7 +101,24 @@ class TestWatchSections(unittest.TestCase):
                 "base": 0x00103A78,
                 "offsets": [0x30, 0x104],
                 "type": "float",
+                "feeds": None,
             }])
+        finally:
+            os.unlink(path)
+
+    def test_normal_watch_with_feeds(self):
+        path = write_ini(
+            "[watch:Sideways Speed]\n"
+            "module = FDNYFirefighter.exe\n"
+            "base = 0x00103A78\n"
+            "offsets = 0x30,0x104\n"
+            "type = float\n"
+            "feeds = velocity_x\n"
+        )
+        try:
+            _, watches, warnings = load_config(path)
+            self.assertEqual(warnings, [])
+            self.assertEqual(watches[0]["feeds"], "velocity_x")
         finally:
             os.unlink(path)
 
@@ -112,21 +138,33 @@ class TestWatchSections(unittest.TestCase):
             os.unlink(path)
 
     def test_calculated_watch_needs_no_other_keys(self):
-        path = write_ini("[watch:Speed]\ncalculated = true\n")
+        path = write_ini("[watch:Speed]\ncalculated = speed\n")
         try:
             _, watches, warnings = load_config(path)
             self.assertEqual(warnings, [])
             self.assertEqual(watches, [{
                 "label": "Speed", "module": None, "base": None,
-                "offsets": [], "calculated": True,
+                "offsets": [], "calculated": "speed",
             }])
+        finally:
+            os.unlink(path)
+
+    def test_calculated_kind_is_freeform_from_label(self):
+        # The section name (label) is display-only; renaming it must not
+        # affect the calculated kind, which is a separate value.
+        path = write_ini("[watch:Movement Speed]\ncalculated = speed\n")
+        try:
+            _, watches, warnings = load_config(path)
+            self.assertEqual(warnings, [])
+            self.assertEqual(watches[0]["label"], "Movement Speed")
+            self.assertEqual(watches[0]["calculated"], "speed")
         finally:
             os.unlink(path)
 
     def test_watch_order_matches_file_order(self):
         path = write_ini(
-            "[watch:B]\ncalculated = true\n"
-            "[watch:A]\ncalculated = true\n"
+            "[watch:B]\ncalculated = speed\n"
+            "[watch:A]\ncalculated = speed\n"
         )
         try:
             _, watches, _ = load_config(path)
