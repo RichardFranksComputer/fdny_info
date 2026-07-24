@@ -1,15 +1,17 @@
-name: Build Overlay Exe
+name: Release Overlay Exe
 
+# Release model: publishing a GitHub Release builds the overlay and attaches
+# a ready-to-run "FDNY Overlay.zip" (containing an "FDNY Overlay" folder with
+# the exe/ini/icon together) to that release. workflow_dispatch is kept for
+# a manual test build, which uploads the same zip as a workflow artifact
+# instead (there's no release to attach it to).
 on:
-  push:
-    branches: [main]
-    paths:
-      - "overlay/overlay.py"
-      - "overlay/overlay.ini"
-      - "overlay/build.ps1"
-      - "overlay/tests/**"
-      - ".github/workflows/build-overlay-exe.yml"
+  release:
+    types: [published]
   workflow_dispatch: {}
+
+permissions:
+  contents: write # needed to upload an asset to the release
 
 jobs:
   build:
@@ -28,10 +30,30 @@ jobs:
         shell: pwsh
         run: ./build.ps1
 
-      - uses: actions/upload-artifact@v4
+      - name: Package "FDNY Overlay.zip"
+        shell: pwsh
+        run: |
+          $StageDir = Join-Path $env:RUNNER_TEMP "FDNY Overlay"
+          New-Item -ItemType Directory -Path $StageDir -Force | Out-Null
+          Copy-Item -Path "dist\FDNY_Overlay.exe" -Destination $StageDir
+          Copy-Item -Path "dist\overlay.ini" -Destination $StageDir
+          Copy-Item -Path "dist\icon.ico" -Destination $StageDir
+
+          $ZipPath = Join-Path $env:RUNNER_TEMP "FDNY Overlay.zip"
+          Compress-Archive -Path $StageDir -DestinationPath $ZipPath -Force
+          echo "ZIP_PATH=$ZipPath" >> $env:GITHUB_ENV
+
+      - name: Upload zip to the release
+        if: github.event_name == 'release'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ github.event.release.tag_name }}" "$env:ZIP_PATH" --clobber
+
+      - name: Upload zip as a workflow artifact (manual test runs only)
+        if: github.event_name != 'release'
+        uses: actions/upload-artifact@v4
         with:
-          name: FDNY_Overlay
-          path: |
-            overlay/dist/FDNY_Overlay.exe
-            overlay/dist/overlay.ini
+          name: FDNY Overlay
+          path: ${{ env.ZIP_PATH }}
           if-no-files-found: error

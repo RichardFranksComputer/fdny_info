@@ -12,7 +12,7 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from overlay import load_config, parse_int, _DEFAULT_GENERAL
+from values import load_config, parse_int, _DEFAULT_GENERAL
 
 
 def write_ini(content):

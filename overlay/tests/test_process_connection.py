@@ -1,5 +1,5 @@
 """
-Tests for ProcessConnection, the state machine in overlay.py that handles:
+Tests for ProcessConnection, the state machine in process_reader.py that handles:
   - process not found (yet)
   - process found but OpenProcess fails, retried up to max_open_attempts
   - successful attach
@@ -18,7 +18,7 @@ from unittest.mock import MagicMock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from overlay import ProcessConnection
+from process_reader import ProcessConnection
 
 
 class FakeClock:
