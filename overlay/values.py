@@ -18,7 +18,12 @@ _DEFAULT_GENERAL = {
     "process_name": "FDNYFirefighter.exe",
     "refresh_ms": 33,
     "text_color": "#00ff00",  # the original hardcoded "lime"
+    "window_width": 300,
     "font_size": 12,
+    "column_padding": 5,
+    "label_column_fraction": 0.73,  # rest goes to the value column
+    "line_padding": 6,  # extra breathing room per row beyond the raw font metrics
+    "alpha": 0.55,  # whole-window blend, used by both the Tk and Win32 layers
 }
 
 def get_base_dir():
@@ -64,7 +69,12 @@ def load_config(path=CONFIG_PATH):
         general["process_name"] = g.get("process_name", general["process_name"])
         general["refresh_ms"] = g.getint("refresh_ms", fallback=general["refresh_ms"])
         general["text_color"] = g.get("text_color", general["text_color"])
+        general["window_width"] = g.getint("window_width", fallback=general["window_width"])
         general["font_size"] = g.getint("font_size", fallback=general["font_size"])
+        general["column_padding"] = g.getint("column_padding", fallback=general["column_padding"])
+        general["label_column_fraction"] = g.getfloat("label_column_fraction", fallback=general["label_column_fraction"])
+        general["line_padding"] = g.getint("line_padding", fallback=general["line_padding"])
+        general["alpha"] = g.getfloat("alpha", fallback=general["alpha"])
 
     for section in parser.sections():
         if not section.startswith("watch:"):
@@ -102,6 +112,11 @@ CONFIG_GENERAL, WATCHES, CONFIG_WARNINGS = load_config()
 PROCESS_NAME = CONFIG_GENERAL["process_name"]
 REFRESH_MS = CONFIG_GENERAL["refresh_ms"]
 FONT_SIZE = CONFIG_GENERAL["font_size"]
+WINDOW_WIDTH = CONFIG_GENERAL["window_width"]
+COLUMN_PADDING = CONFIG_GENERAL["column_padding"]
+LABEL_COLUMN_FRACTION = CONFIG_GENERAL["label_column_fraction"]
+LINE_PADDING = CONFIG_GENERAL["line_padding"]
+ALPHA = CONFIG_GENERAL["alpha"]
 
 try:
     TEXT_COLOR = parse_hex_color(CONFIG_GENERAL["text_color"])

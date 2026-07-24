@@ -11,6 +11,11 @@ from values import (
     REFRESH_MS,
     FONT_SIZE,
     TEXT_COLOR,
+    WINDOW_WIDTH,
+    COLUMN_PADDING,
+    LABEL_COLUMN_FRACTION,
+    LINE_PADDING,
+    ALPHA,
     WatchEngine,
     get_base_dir,
 )
@@ -21,12 +26,7 @@ ICON_PATH = os.path.join(get_base_dir(), "icon.ico")
 # LAYOUT
 # =====================================================
 
-WINDOW_WIDTH = 300
-COLUMN_PADDING = 5
-LABEL_COLUMN_FRACTION = 0.73  # rest goes to the value column
 STATUS_LINES = 2  # room for the two-line "process X\nnot found" messages
-LINE_PADDING = 6  # extra breathing room per row beyond the raw font metrics
-ALPHA = 0.55  # whole-window blend, used by both the Tk and Win32 layers
 
 # Root-window background color, never used by any real widget (every
 # label/frame/button is explicitly bg="black") - see _apply_transparency.
