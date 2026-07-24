@@ -1,7 +1,4 @@
-"""
-Tests for the color helpers used by the config-driven text_color setting and
-the minimize/close buttons' translucent-looking border.
-"""
+"""Tests for parse_hex_color, used by the config-driven text_color setting."""
 
 import os
 import sys
@@ -9,42 +6,27 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from overlay import parse_rgb_to_hex, blend_color
+from values import parse_hex_color
 
 
-class TestParseRgbToHex(unittest.TestCase):
+class TestParseHexColor(unittest.TestCase):
     def test_basic(self):
-        self.assertEqual(parse_rgb_to_hex("0,255,0"), "#00ff00")
+        self.assertEqual(parse_hex_color("#00ff00"), "#00ff00")
 
-    def test_strips_whitespace_around_components(self):
-        self.assertEqual(parse_rgb_to_hex(" 255, 0 , 128 "), "#ff0080")
+    def test_strips_whitespace(self):
+        self.assertEqual(parse_hex_color(" #ff0080 "), "#ff0080")
 
-    def test_wrong_component_count_raises(self):
+    def test_missing_hash_raises(self):
         with self.assertRaises(ValueError):
-            parse_rgb_to_hex("255,0")
+            parse_hex_color("00ff00")
 
-    def test_out_of_range_component_raises(self):
+    def test_wrong_length_raises(self):
         with self.assertRaises(ValueError):
-            parse_rgb_to_hex("256,0,0")
+            parse_hex_color("#0f0")
 
-    def test_negative_component_raises(self):
+    def test_non_hex_digit_raises(self):
         with self.assertRaises(ValueError):
-            parse_rgb_to_hex("-1,0,0")
-
-    def test_non_numeric_component_raises(self):
-        with self.assertRaises(ValueError):
-            parse_rgb_to_hex("r,g,b")
-
-
-class TestBlendColor(unittest.TestCase):
-    def test_full_alpha_returns_fg(self):
-        self.assertEqual(blend_color("#00ff00", "#000000", 1.0), "#00ff00")
-
-    def test_zero_alpha_returns_bg(self):
-        self.assertEqual(blend_color("#00ff00", "#000000", 0.0), "#000000")
-
-    def test_half_alpha_blends_toward_bg(self):
-        self.assertEqual(blend_color("#00ff00", "#000000", 0.5), "#008000")
+            parse_hex_color("#gg0000")
 
 
 if __name__ == "__main__":
