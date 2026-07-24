@@ -1,26 +1,96 @@
+import configparser
 import ctypes
 import os
+import re
 import tkinter as tk
 import tkinter.font as tkfont
 
 from process_reader import ProcessConnection, PTR_SIZE
-from values import (
+from watch_engine import (
     WATCHES,
-    CONFIG_WARNINGS,
+    MODULE_WARNINGS,
     PROCESS_NAME,
-    REFRESH_MS,
-    FONT_SIZE,
-    TEXT_COLOR,
-    WINDOW_WIDTH,
-    COLUMN_PADDING,
-    LABEL_COLUMN_FRACTION,
-    LINE_PADDING,
-    ALPHA,
     WatchEngine,
     get_base_dir,
 )
 
 ICON_PATH = os.path.join(get_base_dir(), "icon.ico")
+
+# =====================================================
+# CONFIG
+# =====================================================
+# overlay.ini is aesthetics/behavior only - what's shown and how it's
+# calculated is a values-*.py file, loaded by watch_engine.py. Nothing in
+# WatchEngine reads any of these settings, so overlay.py (their only
+# consumer) parses them directly instead of routing them through the engine.
+
+_DEFAULT_GENERAL = {
+    "refresh_ms": 33,
+    "text_color": "#00ff00",  # the original hardcoded "lime"
+    "window_width": 300,
+    "font_size": 12,
+    "column_padding": 5,
+    "label_column_fraction": 0.73,  # rest goes to the value column
+    "line_padding": 6,  # extra breathing room per row beyond the raw font metrics
+    "alpha": 0.55,  # whole-window blend, used by both the Tk and Win32 layers
+}
+
+CONFIG_PATH = os.path.join(get_base_dir(), "overlay.ini")
+
+def parse_hex_color(value):
+    """Validate a Tk '#rrggbb' hex color string."""
+    value = value.strip()
+    if not re.fullmatch(r"#[0-9a-fA-F]{6}", value):
+        raise ValueError(f"expected '#rrggbb', got {value!r}")
+    return value
+
+def load_config(path=CONFIG_PATH):
+    """Load [general] aesthetic settings from overlay.ini at `path`. Falls
+    back to defaults rather than crashing on a missing/broken file.
+    Returns (general_dict, warnings_list)."""
+    warnings = []
+    general = dict(_DEFAULT_GENERAL)
+
+    parser = configparser.ConfigParser()
+    try:
+        read_ok = parser.read(path)
+    except configparser.Error as e:
+        warnings.append(f"could not parse {os.path.basename(path)}: {e}")
+        return general, warnings
+
+    if not read_ok:
+        warnings.append(f"{os.path.basename(path)} not found - using built-in defaults")
+        return general, warnings
+
+    if parser.has_section("general"):
+        g = parser["general"]
+        general["refresh_ms"] = g.getint("refresh_ms", fallback=general["refresh_ms"])
+        general["text_color"] = g.get("text_color", general["text_color"])
+        general["window_width"] = g.getint("window_width", fallback=general["window_width"])
+        general["font_size"] = g.getint("font_size", fallback=general["font_size"])
+        general["column_padding"] = g.getint("column_padding", fallback=general["column_padding"])
+        general["label_column_fraction"] = g.getfloat("label_column_fraction", fallback=general["label_column_fraction"])
+        general["line_padding"] = g.getint("line_padding", fallback=general["line_padding"])
+        general["alpha"] = g.getfloat("alpha", fallback=general["alpha"])
+
+    return general, warnings
+
+CONFIG_GENERAL, CONFIG_WARNINGS = load_config()
+CONFIG_WARNINGS = CONFIG_WARNINGS + MODULE_WARNINGS  # ini warnings + game-module-load warnings, shown together
+
+REFRESH_MS = CONFIG_GENERAL["refresh_ms"]
+FONT_SIZE = CONFIG_GENERAL["font_size"]
+WINDOW_WIDTH = CONFIG_GENERAL["window_width"]
+COLUMN_PADDING = CONFIG_GENERAL["column_padding"]
+LABEL_COLUMN_FRACTION = CONFIG_GENERAL["label_column_fraction"]
+LINE_PADDING = CONFIG_GENERAL["line_padding"]
+ALPHA = CONFIG_GENERAL["alpha"]
+
+try:
+    TEXT_COLOR = parse_hex_color(CONFIG_GENERAL["text_color"])
+except ValueError as e:
+    CONFIG_WARNINGS.append(f"invalid text_color {CONFIG_GENERAL['text_color']!r}: {e}; using default")
+    TEXT_COLOR = _DEFAULT_GENERAL["text_color"]
 
 # =====================================================
 # LAYOUT
