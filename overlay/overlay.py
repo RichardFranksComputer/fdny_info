@@ -54,7 +54,6 @@ class Overlay(tk.Tk):
         self._placeholders_shown = False  # values currently blanked to "--"
 
         self.title("Uncle Rick's Overlay")  # taskbar tooltip / Alt-Tab preview text
-        self._set_icon()
         self.attributes("-topmost", True)
         self.attributes("-alpha", ALPHA)  # also sets WS_EX_LAYERED, needed by _apply_transparency
         self.configure(bg=TRANSPARENT_KEY)
@@ -81,6 +80,7 @@ class Overlay(tk.Tk):
             self.hwnd = None
             print(f"Warning: Could not get window handle: {e}")
         self._apply_transparency()
+        self._set_icon()
 
         self.protocol("WM_DELETE_WINDOW", self.on_close)
 
@@ -111,10 +111,8 @@ class Overlay(tk.Tk):
             value_lbl.grid(row=row, column=1, sticky="w", padx=(0, COLUMN_PADDING))
             self.value_labels.append(value_lbl)
 
-        # Built last so Tk's default stacking (newest sibling on top)
-        # already puts it above status_label/watches_frame with no extra
-        # lift() needed here - _set_status still needs one of its own,
-        # since re-packing status_label later restacks it back on top.
+        # Built last so Tk's default stacking (newest on top) already puts
+        # it above status_label/watches_frame - no lift() needed here.
         self._build_buttons()
 
         self.engine = WatchEngine()
@@ -128,10 +126,9 @@ class Overlay(tk.Tk):
         self.destroy()
 
     def _build_buttons(self):
-        """Minimize/close buttons, top-right corner. Real children of self:
-        place() keeps them pinned there across every resize automatically.
-        Always clickable since they're opaque, never TRANSPARENT_KEY -
-        see _apply_transparency."""
+        """Minimize/close buttons, top-right corner, real children of self
+        (place() keeps them pinned there). Always clickable: opaque, never
+        TRANSPARENT_KEY - see _apply_transparency."""
         size = self._font.metrics("linespace")
         self.button_frame = tk.Frame(self, bg="black")
         self.close_btn = self._make_square_button(self.button_frame, "x", self.on_close, size)
@@ -188,14 +185,28 @@ class Overlay(tk.Tk):
             print(f"Warning: Could not set layered window attributes: {e}")
 
     def _set_icon(self):
-        """Taskbar/Alt-Tab/title-bar icon, from icon.ico next to the script
-        or exe (see ICON_PATH). Missing file degrades to Tk's default
-        feather icon rather than crashing. Must use default= here - plain
-        iconbitmap(path) only sets Tk's own title-bar icon on Windows, not
-        the underlying Win32 class icon the taskbar actually reads."""
+        """Not Tk's iconbitmap(): it ignores the process's real DPI scale,
+        so a 150%+ display still gets a stretched 32px icon. LoadImage with
+        a DPI-scaled target size picks the matching .ico frame instead."""
+        if not self.hwnd or not os.path.exists(ICON_PATH):
+            return
         try:
-            self.iconbitmap(default=ICON_PATH)
-        except tk.TclError as e:
+            IMAGE_ICON, LR_LOADFROMFILE = 1, 0x10
+            SM_CXICON, SM_CXSMICON = 11, 49
+            user32 = ctypes.windll.user32
+            big_size = user32.GetSystemMetrics(SM_CXICON)
+            small_size = user32.GetSystemMetrics(SM_CXSMICON)
+            hicon_big = user32.LoadImageW(None, ICON_PATH, IMAGE_ICON, big_size, big_size, LR_LOADFROMFILE)
+            hicon_small = user32.LoadImageW(None, ICON_PATH, IMAGE_ICON, small_size, small_size, LR_LOADFROMFILE)
+
+            WM_SETICON, ICON_SMALL, ICON_BIG = 0x80, 0, 1
+            user32.SendMessageW(self.hwnd, WM_SETICON, ICON_SMALL, hicon_small)
+            user32.SendMessageW(self.hwnd, WM_SETICON, ICON_BIG, hicon_big)
+
+            GCLP_HICON, GCLP_HICONSM = -14, -34
+            user32.SetClassLongPtrW(self.hwnd, GCLP_HICONSM, hicon_small)
+            user32.SetClassLongPtrW(self.hwnd, GCLP_HICON, hicon_big)
+        except Exception as e:
             print(f"Warning: Could not set icon from {ICON_PATH}: {e}")
 
     def _force_taskbar_icon(self):
@@ -281,11 +292,8 @@ class Overlay(tk.Tk):
 
 if __name__ == "__main__":
     print(f"System pointer size: {PTR_SIZE} bytes")
-    # A non-DPI-aware process gets "DPI-virtualized" by Windows: it's asked
-    # for a 96-DPI-baseline icon/frame and the result is bitmap-stretched to
-    # fit the real (scaled) display, which is what reads as blur - happens
-    # regardless of how many sizes icon.ico embeds. Must be set before any
-    # window is created.
+    # A non-DPI-aware process gets DPI-virtualized icons/frames (blurry on
+    # scaled displays); must be set before any window is created.
     try:
         ctypes.windll.shcore.SetProcessDpiAwareness(2)  # PROCESS_PER_MONITOR_DPI_AWARE
     except Exception:
@@ -293,10 +301,8 @@ if __name__ == "__main__":
             ctypes.windll.user32.SetProcessDPIAware()  # Windows 7/8 fallback
         except Exception as e:
             print(f"Warning: Could not set DPI awareness: {e}")
-    # Without an explicit AppUserModelID, Windows identifies this taskbar
-    # button with its hosting python.exe and shows *that* icon, ignoring
-    # whatever this window's own icon is set to - must be called before the
-    # window/taskbar button exists.
+    # Without this, Windows shows the hosting python.exe's icon on the
+    # taskbar instead of ours. Must run before the window exists.
     try:
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("FDNYOverlay.Overlay")
     except Exception as e:

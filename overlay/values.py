@@ -213,19 +213,10 @@ class WatchEngine:
             return "<err>"
 
     def calculate_jump_height(self):
-        """Update Previous/Current Jump Max from Z Collision Center vs Z
-        Ground Height. Skipped entirely while on a ladder (Player State 5) -
-        climbing moves Z Collision Center the same way a jump would, which
-        would otherwise be misread as a jump.
-
-        Leaving the ladder needs a *fresh* baseline at the post-ladder
-        height, not the frozen pre-ladder one: Player State only reports the
-        ladder briefly (it can read something else, e.g. 3, the instant you
-        jump off), so this doesn't key off "N ticks without seeing state 5" -
-        it just remembers that the ladder was left mid-flight
-        (_pending_ladder_rebaseline) and rebaselines on the very next valid
-        reading, exactly like the very first reading ever. Without this,
-        the climbed height gets added on top of the real jump height."""
+        """Tracks Previous/Current Jump Max from Z Collision Center vs Z
+        Ground Height. Skipped while on a ladder (climbing reads like a
+        jump); _pending_ladder_rebaseline forces a fresh baseline on the
+        next reading after leaving one, instead of using the stale one."""
         if self.feeds.get("player_state") == PLAYER_STATE_ON_LADDER:
             self._pending_ladder_rebaseline = True
             return
