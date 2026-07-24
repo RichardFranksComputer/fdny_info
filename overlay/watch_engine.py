@@ -61,10 +61,8 @@ WATCHES = getattr(VALUES_MODULE, "WATCHES", []) if VALUES_MODULE else []
 
 class WatchEngine:
     """Turns a process handle into display text for every configured watch.
-    No Tkinter - overlay.py owns rendering, this owns values. Calculated
-    values are entirely delegated to `game` (the loaded values-*.py module,
-    e.g. its make_state()/compute()) - this class knows nothing about any
-    specific game's logic, only the make_state()/compute() contract."""
+    Calculated values are delegated entirely to `game` (make_state()/
+    compute()) - this class knows only that contract, not any game logic."""
 
     def __init__(self, watches=WATCHES, game=VALUES_MODULE):
         self.watches = watches

@@ -1,15 +1,7 @@
-"""What the overlay shows for FDNYFirefighter.exe: the watch list (raw
-memory reads and calculated values) plus the calculation logic behind the
-calculated ones. Autoloaded by values.py because this file's name matches
-values-*.py - rename this file's "fdny" part freely, only the "values-"
-prefix and the WATCHES/PROCESS_NAME/make_state/compute names below matter.
-
-To make a new game's file: copy this one, change PROCESS_NAME and the
-WATCHES table (built from the watch()/calculated() helpers below) to that
-game's memory addresses, and write your own make_state()/compute() (or drop
-them entirely if you have no calculated values - a plain WATCHES list of
-watch() entries is a complete, valid file on its own).
-"""
+"""What the overlay shows for FDNYFirefighter.exe: WATCHES (raw reads +
+calculated placeholders) and the compute() logic behind them. Autoloaded
+by watch_engine.py via the values-*.py naming convention - copy this file
+to add a new game."""
 
 import math
 
@@ -32,18 +24,14 @@ def calculated(label, kind):
     key `kind` (must match a key compute() actually returns)."""
     return {"label": label, "calculated": kind}
 
-# -----------------------------------------------------------------------
-# Watches: one entry per line shown in the overlay, in list order. This
-# section is technical, reverse-engineered data (from tools like Cheat
-# Engine) - getting an address wrong won't break anything else, that one
-# line will just show "<read?>"/"<ptr?>" instead of a real number.
-# -----------------------------------------------------------------------
+# One entry per line shown in the overlay, in list order. Reverse-engineered
+# data - a wrong address just shows "<read?>"/"<ptr?>", nothing else breaks.
 
 WATCHES = [
+    calculated("XY Speed", "speed"),
     watch("Vel X", FDNY, 0x00103A78, offsets=(0x30, 0x104), feeds="velocity_x"),
     watch("Vel Y", FDNY, 0x00103A78, offsets=(0x30, 0xFC), feeds="velocity_y"),
     watch("Vel Z", FDNY, 0x00103A78, offsets=(0x30, 0x100), feeds="velocity_z"),
-    calculated("XY Speed", "speed"),
     watch("Player State", FDNY, 0x00103A78, offsets=(0x30, 0x18c), type="byte", feeds="player_state"),
     watch("Player Ground State", FDNY, 0x00103A78, offsets=(0x30, 0x12c), type="byte"),
     watch("Z Coll Center", GENESIS, 0x362EE8, feeds="z_collision_center"),
@@ -97,19 +85,10 @@ def _speed(feeds):
 
 
 def _update_jump_height(feeds, state):
-    """Updates Previous/Current Jump Max from Z Collision Center vs Z
-    Ground Height. Skipped entirely while on a ladder (Player State 5) -
-    climbing moves Z Collision Center the same way a jump would, which
-    would otherwise be misread as a jump.
-
-    Leaving the ladder needs a *fresh* baseline at the post-ladder
-    height, not the frozen pre-ladder one: Player State only reports the
-    ladder briefly (it can read something else, e.g. 3, the instant you
-    jump off), so this doesn't key off "N ticks without seeing state 5" -
-    it just remembers that the ladder was left mid-flight
-    (pending_ladder_rebaseline) and rebaselines on the very next valid
-    reading, exactly like the very first reading ever. Without this,
-    the climbed height gets added on top of the real jump height."""
+    """Tracks jump height from Z Collision Center vs Z Ground Height;
+    skipped while on a ladder (state 5), which moves Z the same way a jump
+    does. Rebaselines on the next reading after leaving one, since state
+    doesn't reliably hold 5 for the whole climb."""
     if feeds.get("player_state") == PLAYER_STATE_ON_LADDER:
         state["pending_ladder_rebaseline"] = True
         return

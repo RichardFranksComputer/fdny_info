@@ -1,13 +1,6 @@
-"""
-Tests for values-fdny.py's compute(): Speed from Vel X/Y, and jump-height
-baseline tracking (completed-jump recording, the Player State 5 "on ladder"
-guard that freezes tracking so climbing isn't misread as a jump, then
-rebaselines at the post-ladder height on the next reading). Ported 1:1 from
-the old WatchEngine.calculate_jump_height/_speed_text.
-
-Loaded via importlib since "values-fdny.py" isn't an importable identifier -
-the same loading mechanism values.load_values_module() uses at runtime.
-"""
+"""Tests for values-fdny.py's compute(): Speed from Vel X/Y, and jump-height
+tracking (ladder guard, post-ladder rebaseline). Loaded via importlib since
+"values-fdny.py" isn't an importable identifier."""
 
 import importlib.util
 import os

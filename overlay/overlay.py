@@ -19,21 +19,8 @@ ICON_PATH = os.path.join(get_base_dir(), "icon.ico")
 # =====================================================
 # CONFIG
 # =====================================================
-# overlay.ini is aesthetics/behavior only - what's shown and how it's
-# calculated is a values-*.py file, loaded by watch_engine.py. Nothing in
-# WatchEngine reads any of these settings, so overlay.py (their only
-# consumer) parses them directly instead of routing them through the engine.
-
-_DEFAULT_GENERAL = {
-    "refresh_ms": 33,
-    "text_color": "#00ff00",  # the original hardcoded "lime"
-    "window_width": 300,
-    "font_size": 12,
-    "column_padding": 5,
-    "label_column_fraction": 0.73,  # rest goes to the value column
-    "line_padding": 6,  # extra breathing room per row beyond the raw font metrics
-    "alpha": 0.55,  # whole-window blend, used by both the Tk and Win32 layers
-}
+# Aesthetics only (watch_engine.py owns what's shown); overlay.ini is
+# assumed always present and complete, not defended against.
 
 CONFIG_PATH = os.path.join(get_base_dir(), "overlay.ini")
 
@@ -45,38 +32,25 @@ def parse_hex_color(value):
     return value
 
 def load_config(path=CONFIG_PATH):
-    """Load [general] aesthetic settings from overlay.ini at `path`. Falls
-    back to defaults rather than crashing on a missing/broken file.
-    Returns (general_dict, warnings_list)."""
-    warnings = []
-    general = dict(_DEFAULT_GENERAL)
-
+    """Load [general] settings. parser.getint(section, option) is used, not
+    the section proxy's getint() - only the former raises on a missing key
+    instead of silently returning None."""
     parser = configparser.ConfigParser()
-    try:
-        read_ok = parser.read(path)
-    except configparser.Error as e:
-        warnings.append(f"could not parse {os.path.basename(path)}: {e}")
-        return general, warnings
+    parser.read(path)
+    section = "general"
+    return {
+        "refresh_ms": parser.getint(section, "refresh_ms"),
+        "text_color": parser.get(section, "text_color"),
+        "window_width": parser.getint(section, "window_width"),
+        "font_size": parser.getint(section, "font_size"),
+        "column_padding": parser.getint(section, "column_padding"),
+        "label_column_fraction": parser.getfloat(section, "label_column_fraction"),
+        "line_padding": parser.getint(section, "line_padding"),
+        "alpha": parser.getfloat(section, "alpha"),
+    }
 
-    if not read_ok:
-        warnings.append(f"{os.path.basename(path)} not found - using built-in defaults")
-        return general, warnings
-
-    if parser.has_section("general"):
-        g = parser["general"]
-        general["refresh_ms"] = g.getint("refresh_ms", fallback=general["refresh_ms"])
-        general["text_color"] = g.get("text_color", general["text_color"])
-        general["window_width"] = g.getint("window_width", fallback=general["window_width"])
-        general["font_size"] = g.getint("font_size", fallback=general["font_size"])
-        general["column_padding"] = g.getint("column_padding", fallback=general["column_padding"])
-        general["label_column_fraction"] = g.getfloat("label_column_fraction", fallback=general["label_column_fraction"])
-        general["line_padding"] = g.getint("line_padding", fallback=general["line_padding"])
-        general["alpha"] = g.getfloat("alpha", fallback=general["alpha"])
-
-    return general, warnings
-
-CONFIG_GENERAL, CONFIG_WARNINGS = load_config()
-CONFIG_WARNINGS = CONFIG_WARNINGS + MODULE_WARNINGS  # ini warnings + game-module-load warnings, shown together
+CONFIG_GENERAL = load_config()
+CONFIG_WARNINGS = list(MODULE_WARNINGS)  # game-module-load warnings, if any
 
 REFRESH_MS = CONFIG_GENERAL["refresh_ms"]
 FONT_SIZE = CONFIG_GENERAL["font_size"]
@@ -85,12 +59,7 @@ COLUMN_PADDING = CONFIG_GENERAL["column_padding"]
 LABEL_COLUMN_FRACTION = CONFIG_GENERAL["label_column_fraction"]
 LINE_PADDING = CONFIG_GENERAL["line_padding"]
 ALPHA = CONFIG_GENERAL["alpha"]
-
-try:
-    TEXT_COLOR = parse_hex_color(CONFIG_GENERAL["text_color"])
-except ValueError as e:
-    CONFIG_WARNINGS.append(f"invalid text_color {CONFIG_GENERAL['text_color']!r}: {e}; using default")
-    TEXT_COLOR = _DEFAULT_GENERAL["text_color"]
+TEXT_COLOR = parse_hex_color(CONFIG_GENERAL["text_color"])
 
 # =====================================================
 # LAYOUT
@@ -239,11 +208,9 @@ class Overlay(tk.Tk):
         self.geometry(f"+{event.x_root - dx}+{event.y_root - dy}")
 
     def _apply_transparency(self):
-        """Per-pixel click-through: SetLayeredWindowAttributes with
-        LWA_COLORKEY|LWA_ALPHA makes TRANSPARENT_KEY pixels invisible and
-        click-through, while every real widget (never that color) stays
-        opaque, alpha-blended, and always clickable - no per-widget
-        click-through toggle needed."""
+        """Per-pixel click-through via SetLayeredWindowAttributes:
+        TRANSPARENT_KEY pixels are invisible/click-through, every real
+        widget (never that color) stays opaque and clickable."""
         if not self.hwnd:
             return
         LWA_COLORKEY, LWA_ALPHA = 0x1, 0x2

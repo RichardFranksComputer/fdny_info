@@ -1,11 +1,6 @@
-"""
-Tests for WatchEngine's calculated-value plumbing: it delegates entirely to
-a game module's make_state()/compute() and only handles dispatch/formatting
-("<calc?>" for a kind the module never returns, "<wait>" for a None value,
-otherwise 3-decimal formatting) plus raw-watch reads. A fake game module is
-used here so these tests stay independent of any one game's own logic - see
-test_values_fdny.py for FDNY's actual compute() (speed, jump-height).
-"""
+"""Tests for WatchEngine's calculated-value dispatch ("<calc?>"/"<wait>"
+formatting over a fake game module's compute()) - independent of any real
+game's logic. See test_values_fdny.py for FDNY's own compute()."""
 
 import os
 import sys
