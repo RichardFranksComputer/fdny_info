@@ -1,103 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CheatTable CheatEngineTableVersion="46">
+<CheatTable CheatEngineTableVersion="52">
   <CheatEntries>
     <CheatEntry>
       <ID>0</ID>
+      <Description>"fps cap (default 1/60 - .0166667, 0 = uncapped)"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Double</VariableType>
+      <Address>0x004dfa20</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1</ID>
+      <Description>"jump impulse velocity (default = 400, &gt;400 = higher, &gt;400 = lower)"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Float</VariableType>
+      <Address>FDNYFirefighter.exe+e1710</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>2</ID>
       <Description>"velXadddress"</Description>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>Float</VariableType>
-<<<<<<< HEAD:livesplit/game_variable_info/coordinate_and_velocity.ct
-      <Address>FDNYFirefighter.exe+00102B94</Address>
-      <Offsets>
-        <Offset>9c</Offset>
-=======
       <Address>FDNYFirefighter.exe+00103A78</Address>
       <Offsets>
         <Offset>104</Offset>
         <Offset>30</Offset>
->>>>>>> fe66998c9174ef57ddc88e2c003813a71a0ff4d3:game_variable_info/coordinate_and_velocity.ct
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>1</ID>
-      <Description>"velYaddress"</Description>
-      <ShowAsSigned>0</ShowAsSigned>
-      <VariableType>Float</VariableType>
-<<<<<<< HEAD:livesplit/game_variable_info/coordinate_and_velocity.ct
-      <Address>FDNYFirefighter.exe+00102B94</Address>
-      <Offsets>
-        <Offset>94</Offset>
-=======
-      <Address>FDNYFirefighter.exe+00103A78</Address>
-      <Offsets>
-        <Offset>FC</Offset>
-        <Offset>30</Offset>
->>>>>>> fe66998c9174ef57ddc88e2c003813a71a0ff4d3:game_variable_info/coordinate_and_velocity.ct
-      </Offsets>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>2</ID>
-      <Description>"velZaddress"</Description>
-      <ShowAsSigned>0</ShowAsSigned>
-      <VariableType>Float</VariableType>
-<<<<<<< HEAD:livesplit/game_variable_info/coordinate_and_velocity.ct
-      <Address>FDNYFirefighter.exe+00102B94</Address>
-      <Offsets>
-        <Offset>98</Offset>
-=======
-      <Address>FDNYFirefighter.exe+00103A78</Address>
-      <Offsets>
-        <Offset>100</Offset>
-        <Offset>30</Offset>
->>>>>>> fe66998c9174ef57ddc88e2c003813a71a0ff4d3:game_variable_info/coordinate_and_velocity.ct
       </Offsets>
     </CheatEntry>
     <CheatEntry>
       <ID>3</ID>
-      <Description>"coordXaddress"</Description>
+      <Description>"velYaddress"</Description>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>Float</VariableType>
-<<<<<<< HEAD:livesplit/game_variable_info/coordinate_and_velocity.ct
-      <Address>FDNYFirefighter.exe+00102B94</Address>
-      <Offsets>
-        <Offset>0</Offset>
-=======
       <Address>FDNYFirefighter.exe+00103A78</Address>
       <Offsets>
-        <Offset>3400</Offset>
+        <Offset>FC</Offset>
         <Offset>30</Offset>
->>>>>>> fe66998c9174ef57ddc88e2c003813a71a0ff4d3:game_variable_info/coordinate_and_velocity.ct
       </Offsets>
     </CheatEntry>
     <CheatEntry>
       <ID>4</ID>
-      <Description>"coordYddress"</Description>
+      <Description>"velZaddress"</Description>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>Float</VariableType>
-<<<<<<< HEAD:livesplit/game_variable_info/coordinate_and_velocity.ct
-      <Address>FDNYFirefighter.exe+00102B94</Address>
-      <Offsets>
-        <Offset>8</Offset>
-=======
       <Address>FDNYFirefighter.exe+00103A78</Address>
       <Offsets>
-        <Offset>3408</Offset>
+        <Offset>100</Offset>
         <Offset>30</Offset>
->>>>>>> fe66998c9174ef57ddc88e2c003813a71a0ff4d3:game_variable_info/coordinate_and_velocity.ct
       </Offsets>
     </CheatEntry>
     <CheatEntry>
       <ID>5</ID>
+      <Description>"coordXaddress"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Float</VariableType>
+      <Address>FDNYFirefighter.exe+00103A78</Address>
+      <Offsets>
+        <Offset>3400</Offset>
+        <Offset>30</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>6</ID>
+      <Description>"coordYddress"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Float</VariableType>
+      <Address>FDNYFirefighter.exe+00103A78</Address>
+      <Offsets>
+        <Offset>3408</Offset>
+        <Offset>30</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>7</ID>
       <Description>"coordZaddress"</Description>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>Float</VariableType>
-<<<<<<< HEAD:livesplit/game_variable_info/coordinate_and_velocity.ct
-      <Address>FDNYFirefighter.exe+00102B94</Address>
-      <Offsets>
-        <Offset>4</Offset>
-      </Offsets>
-    </CheatEntry>
-=======
       <Address>FDNYFirefighter.exe+00103A78</Address>
       <Offsets>
         <Offset>3404</Offset>
@@ -116,7 +93,7 @@
       </Offsets>
     </CheatEntry>
     <CheatEntry>
-      <ID>6</ID>
+      <ID>19</ID>
       <Description>"timer?"</Description>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>Float</VariableType>
@@ -127,7 +104,7 @@
       </Offsets>
     </CheatEntry>
     <CheatEntry>
-      <ID>7</ID>
+      <ID>20</ID>
       <Description>"oscillator 1"</Description>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>Float</VariableType>
@@ -218,34 +195,33 @@
       </Offsets>
     </CheatEntry>
     <CheatEntry>
-      <ID>20</ID>
+      <ID>21</ID>
       <Description>"x_collision_center"</Description>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>Float</VariableType>
       <Address>genesis.dll+362eec</Address>
     </CheatEntry>
     <CheatEntry>
-      <ID>21</ID>
+      <ID>22</ID>
       <Description>"y_collision_center"</Description>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>Float</VariableType>
       <Address>genesis.dll+362ee4</Address>
     </CheatEntry>
     <CheatEntry>
-      <ID>19</ID>
+      <ID>23</ID>
       <Description>"z_collision_center"</Description>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>Float</VariableType>
       <Address>genesis.dll+362ee8</Address>
     </CheatEntry>
     <CheatEntry>
-      <ID>22</ID>
+      <ID>24</ID>
       <Description>"frametime"</Description>
       <ShowAsSigned>0</ShowAsSigned>
       <VariableType>Float</VariableType>
       <Address>FDNYFirefighter.exe+102B04</Address>
     </CheatEntry>
->>>>>>> fe66998c9174ef57ddc88e2c003813a71a0ff4d3:game_variable_info/coordinate_and_velocity.ct
   </CheatEntries>
   <UserdefinedSymbols/>
   <Comments>Info about this table:
