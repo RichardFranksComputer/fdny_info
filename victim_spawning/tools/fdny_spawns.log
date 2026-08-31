@@ -1,0 +1,398 @@
+09:00:42 INFO  attach   opening FDNYFirefighter.exe ...
+09:00:42 ERROR attach   FAILED: Could not find process: FDNYFirefighter.exe
+09:00:43 ERROR          is the game running?  try an elevated terminal.
+09:01:19 INFO  attach   opening FDNYFirefighter.exe ...
+09:01:19 INFO  attach   pid=30852  module base=0x00400000
+09:01:19 INFO  probe    0x0045D71E ok  (8b95d0000000)
+09:01:19 INFO  cave     allocated 0x0FDA0000  (1796 bytes: 256 code / ring head 0xFDA0100 / 64 slots)
+09:01:19 INFO  cave     wrote 86 code bytes
+09:01:19 INFO  hook     0x0045D71E -> jmp 0x0FDA0000   (patch e9dd28940f90, 6 bytes displaced)
+09:01:19 INFO  run      MODE=apply  config=g:\My Drive\Github\fdny_info\victim_spawning\spawns.json  poll=40ms  stop_roam=True
+09:01:19 INFO  run      Ctrl+C to stop and restore the original bytes.
+09:01:30 INFO  level    map='oil_rig_a'  index=11  (0 victim entries in config)
+09:01:31 INFO  spawn    victim='<null>'  count=2  pos=(-1076.0, 505.1, -260.0)  this=0x12E8D498
+09:01:31 INFO  apply    victim='<null>'  no config entry -> left on RNG pick
+09:01:31 INFO  spawn    victim='<null>17'  count=2  pos=(-600.0, 549.1, -852.0)  this=0x12E8D8C0
+09:01:31 INFO  apply    victim='<null>17'  no config entry -> left on RNG pick
+09:01:31 INFO  spawn    victim='<null>18'  count=3  pos=(-742.0, 595.8, -762.0)  this=0x12E8DE28
+09:01:31 INFO  apply    victim='<null>18'  no config entry -> left on RNG pick
+09:02:47 INFO  spawn    victim='<null>'  count=2  pos=(-236.0, 505.1, -262.0)  this=0x12EA98A0
+09:02:47 INFO  apply    victim='<null>'  no config entry -> left on RNG pick
+09:02:47 INFO  spawn    victim='<null>17'  count=2  pos=(-600.0, 549.1, -852.0)  this=0x12EA5380
+09:02:47 INFO  apply    victim='<null>17'  no config entry -> left on RNG pick
+09:02:47 INFO  spawn    victim='<null>18'  count=3  pos=(-746.0, 569.6, -874.0)  this=0x12EA7208
+09:02:47 INFO  apply    victim='<null>18'  no config entry -> left on RNG pick
+09:03:07 INFO  level    map='subway_a'  index=9  (0 victim entries in config)
+09:03:07 INFO  spawn    victim='Victim1'  count=3  pos=(1766.0, -544.0, 153.0)  this=0x12E9F130
+09:03:07 INFO  apply    victim='Victim1'  no config entry -> left on RNG pick
+09:03:07 INFO  spawn    victim='Victim2'  count=1  pos=(-1777.0, -106.9, 1549.0)  this=0x12E9F658
+09:03:07 INFO  apply    victim='Victim2'  no config entry -> left on RNG pick
+09:03:07 INFO  spawn    victim='Victim3'  count=1  pos=(2100.0, -588.0, -864.0)  this=0x12ED0090
+09:03:07 INFO  apply    victim='Victim3'  no config entry -> left on RNG pick
+09:03:07 INFO  spawn    victim='Victim4'  count=1  pos=(2302.0, -658.9, 105.0)  this=0x12E9FFF0
+09:03:07 INFO  apply    victim='Victim4'  no config entry -> left on RNG pick
+09:03:07 INFO  spawn    victim='Victim5'  count=1  pos=(-852.0, -106.9, 408.0)  this=0x12E9FAE0
+09:03:07 INFO  apply    victim='Victim5'  no config entry -> left on RNG pick
+09:03:07 INFO  spawn    victim='Victim7'  count=1  pos=(2438.0, -658.9, -3175.0)  this=0x12E96E80
+09:03:07 INFO  apply    victim='Victim7'  no config entry -> left on RNG pick
+09:12:10 INFO  stop     Ctrl+C
+09:12:10 INFO  cleanup  restored original bytes at 0x0045D71E
+09:12:10 INFO  cleanup  freed cave 0x0FDA0000
+09:12:10 INFO  done
+09:12:22 INFO  attach   opening FDNYFirefighter.exe ...
+09:12:22 INFO  attach   pid=30852  module base=0x00400000
+09:12:22 INFO  probe    0x0045D71E ok  (8b95d0000000)
+09:12:22 INFO  cave     allocated 0x0FDA0000  (1796 bytes: 256 code / ring head 0xFDA0100 / 64 slots)
+09:12:22 INFO  cave     wrote 86 code bytes
+09:12:22 INFO  hook     0x0045D71E -> jmp 0x0FDA0000   (patch e9dd28940f90, 6 bytes displaced)
+09:12:22 INFO  run      MODE=apply  config=g:\My Drive\Github\fdny_info\victim_spawning\spawns.json  poll=40ms  stop_roam=True
+09:12:22 INFO  run      Ctrl+C to stop and restore the original bytes.
+09:12:22 INFO  level    map='subway_a'  index=9  (0 victim entries in config)
+09:12:34 INFO  spawn    #0  name='Victim1'  count=3  spot=0  origin=(1180.0,-532.0,-1452.0)  pos=(1180.0, -575.2, -1452.0)  this=0x12EE9AB0
+09:12:34 INFO  apply    #0 name='Victim1'  no config entry -> left on RNG pick
+09:12:34 INFO  spawn    #1  name='Victim2'  count=1  spot=0  origin=(-1777.0,0.0,1549.0)  pos=(-1777.0, -106.9, 1549.0)  this=0x12EDAFA8
+09:12:34 INFO  apply    #1 name='Victim2'  no config entry -> left on RNG pick
+09:12:34 INFO  spawn    #2  name='Victim3'  count=1  spot=0  origin=(2100.0,-516.0,-864.0)  pos=(2100.0, -588.0, -864.0)  this=0x12EDB238
+09:12:34 INFO  apply    #2 name='Victim3'  no config entry -> left on RNG pick
+09:12:34 INFO  spawn    #3  name='Victim4'  count=1  spot=0  origin=(2302.0,-441.0,105.0)  pos=(2302.0, -658.9, 105.0)  this=0x12EA8CC0
+09:12:34 INFO  apply    #3 name='Victim4'  no config entry -> left on RNG pick
+09:12:34 INFO  spawn    #4  name='Victim5'  count=1  spot=0  origin=(-852.0,12.0,408.0)  pos=(-852.0, -106.9, 408.0)  this=0x12EE31E0
+09:12:34 INFO  apply    #4 name='Victim5'  no config entry -> left on RNG pick
+09:12:34 INFO  spawn    #5  name='Victim7'  count=1  spot=0  origin=(2438.0,-412.0,-3175.0)  pos=(2438.0, -658.9, -3175.0)  this=0x12EE3588
+09:12:34 INFO  apply    #5 name='Victim7'  no config entry -> left on RNG pick
+09:12:52 INFO  level    map='dock_h'  index=1  (0 victim entries in config)
+09:13:01 INFO  level    map='mbase'  index=2  (0 victim entries in config)
+09:13:02 INFO  spawn    #0  name='victim1'  count=1  spot=0  origin=(348.0,-136.0,-3068.0)  pos=(348.0, -210.9, -3068.0)  this=0x12EF27C8
+09:13:02 INFO  apply    #0 name='victim1'  no config entry -> left on RNG pick
+09:13:02 INFO  spawn    #1  name='victim3'  count=1  spot=0  origin=(1796.0,-540.0,-3284.0)  pos=(1796.0, -594.9, -3284.0)  this=0x12E97708
+09:13:02 INFO  apply    #1 name='victim3'  no config entry -> left on RNG pick
+09:13:02 INFO  spawn    #2  name='victim4'  count=1  spot=0  origin=(840.0,-260.0,-4812.0)  pos=(840.0, -338.9, -4812.0)  this=0x12E8A1A0
+09:13:02 INFO  apply    #2 name='victim4'  no config entry -> left on RNG pick
+09:13:02 INFO  spawn    #3  name='victim5'  count=1  spot=0  origin=(1852.0,-112.0,-5732.0)  pos=(1852.0, -210.9, -5732.0)  this=0x12E8F7E8
+09:13:02 INFO  apply    #3 name='victim5'  no config entry -> left on RNG pick
+09:13:02 INFO  spawn    #4  name='victim10'  count=1  spot=0  origin=(292.0,-320.0,-1320.0)  pos=(292.0, -410.9, -1320.0)  this=0x12EE4748
+09:13:02 INFO  apply    #4 name='victim10'  no config entry -> left on RNG pick
+09:13:20 INFO  level    map='bar_r'  index=3  (0 victim entries in config)
+09:13:20 INFO  spawn    #0  name='Victim01'  count=1  spot=0  origin=(1980.0,420.0,-80.0)  pos=(1980.0, 373.1, -80.0)  this=0x12ECA1C0
+09:13:20 INFO  apply    #0 name='Victim01'  no config entry -> left on RNG pick
+09:13:20 INFO  spawn    #1  name='Victim02'  count=2  spot=1  origin=(96.0,40.0,-1700.0)  pos=(424.0, 41.1, -1720.0)  this=0x12EDD908
+09:13:20 INFO  apply    #1 name='Victim02'  no config entry -> left on RNG pick
+09:13:20 INFO  spawn    #2  name='Victim03'  count=1  spot=0  origin=(2164.0,304.0,-176.0)  pos=(2164.0, 297.1, -176.0)  this=0x12EE5530
+09:13:20 INFO  apply    #2 name='Victim03'  no config entry -> left on RNG pick
+09:13:20 INFO  spawn    #3  name='Victim04'  count=1  spot=0  origin=(516.0,304.0,-1756.0)  pos=(516.0, 297.1, -1756.0)  this=0x12EA8C10
+09:13:20 INFO  apply    #3 name='Victim04'  no config entry -> left on RNG pick
+09:13:20 INFO  spawn    #4  name='Victim05'  count=3  spot=2  origin=(2104.0,40.0,-1368.0)  pos=(2160.0, 41.1, -1064.0)  this=0x12E88E70
+09:13:20 INFO  apply    #4 name='Victim05'  no config entry -> left on RNG pick
+09:13:20 INFO  spawn    #5  name='Victim06'  count=2  spot=0  origin=(1792.0,40.0,-324.0)  pos=(1792.0, 41.1, -324.0)  this=0x12E89360
+09:13:20 INFO  apply    #5 name='Victim06'  no config entry -> left on RNG pick
+09:13:39 INFO  level    map='gas_r'  index=4  (0 victim entries in config)
+09:13:39 INFO  spawn    #0  name='Victim1'  count=1  spot=0  origin=(1404.0,-172.0,24.0)  pos=(1404.0, -205.9, 24.0)  this=0x12EE4748
+09:13:39 INFO  apply    #0 name='Victim1'  no config entry -> left on RNG pick
+09:13:39 INFO  spawn    #1  name='Victim2'  count=1  spot=0  origin=(1576.0,-80.0,512.0)  pos=(1576.0, -205.9, 512.0)  this=0x12EA8C10
+09:13:39 INFO  apply    #1 name='Victim2'  no config entry -> left on RNG pick
+09:13:39 INFO  spawn    #2  name='Victim3'  count=1  spot=0  origin=(756.0,-64.0,648.0)  pos=(756.0, -205.9, 648.0)  this=0x12ECA1C0
+09:13:39 INFO  apply    #2 name='Victim3'  no config entry -> left on RNG pick
+09:13:39 INFO  spawn    #3  name='Victim4'  count=1  spot=0  origin=(1269.0,-172.0,1404.0)  pos=(1269.0, -206.9, 1404.0)  this=0x12E8A1A0
+09:13:39 INFO  apply    #3 name='Victim4'  no config entry -> left on RNG pick
+09:13:39 INFO  spawn    #4  name='Victim6'  count=1  spot=0  origin=(1988.0,-172.0,480.0)  pos=(1988.0, -214.9, 480.0)  this=0x12EF1960
+09:13:39 INFO  apply    #4 name='Victim6'  no config entry -> left on RNG pick
+09:13:39 INFO  spawn    #5  name='Victim7'  count=1  spot=0  origin=(1972.0,-172.0,-204.0)  pos=(1972.0, -214.9, -204.0)  this=0x12E8F7E8
+09:13:39 INFO  apply    #5 name='Victim7'  no config entry -> left on RNG pick
+09:13:39 INFO  spawn    #6  name='Victim5'  count=1  spot=0  origin=(-404.0,-120.0,1164.0)  pos=(-404.0, -206.9, 1164.0)  this=0x12EA3FA0
+09:13:39 INFO  apply    #6 name='Victim5'  no config entry -> left on RNG pick
+09:13:45 INFO  level    map='bank'  index=6  (0 victim entries in config)
+09:13:46 INFO  spawn    #0  name='betty'  count=2  spot=1  origin=(1176.0,0.0,-672.0)  pos=(1192.0, -38.9, -772.0)  this=0x12E85A30
+09:13:46 INFO  apply    #0 name='betty'  no config entry -> left on RNG pick
+09:13:46 INFO  spawn    #1  name='<null>'  count=1  spot=0  origin=(-331.0,0.0,-287.0)  pos=(-331.0, -38.9, -287.0)  this=0x12E88E70
+09:13:46 INFO  apply    #1 name='<null>'  no config entry -> left on RNG pick
+09:13:46 INFO  spawn    #2  name='<null>'  count=2  spot=0  origin=(735.0,0.0,-2184.0)  pos=(735.0, -38.9, -2184.0)  this=0x12E9FF40
+09:13:46 INFO  apply    #2 name='<null>'  no config entry -> left on RNG pick
+09:13:46 INFO  spawn    #3  name='<null>'  count=2  spot=1  origin=(-768.0,0.0,-2160.0)  pos=(-2423.0, -38.9, -1914.0)  this=0x12E8ABF8
+09:13:46 INFO  apply    #3 name='<null>'  no config entry -> left on RNG pick
+09:13:46 INFO  spawn    #4  name='<null>'  count=2  spot=0  origin=(1128.0,284.0,684.0)  pos=(1128.0, 217.1, 684.0)  this=0x12EA96E8
+09:13:46 INFO  apply    #4 name='<null>'  no config entry -> left on RNG pick
+09:13:46 INFO  spawn    #5  name='<null>'  count=1  spot=0  origin=(-2213.0,314.0,699.0)  pos=(-2213.0, 217.1, 699.0)  this=0x12EFB950
+09:13:46 INFO  apply    #5 name='<null>'  no config entry -> left on RNG pick
+09:13:49 INFO  level    map='boat_a'  index=7  (0 victim entries in config)
+09:13:49 INFO  spawn    #0  name='victimfork'  count=2  spot=0  origin=(698.0,-293.0,2393.0)  pos=(698.0, -339.9, 2393.0)  this=0x12EA61B0
+09:13:49 INFO  apply    #0 name='victimfork'  no config entry -> left on RNG pick
+09:13:49 INFO  spawn    #1  name='girl'  count=2  spot=1  origin=(-1551.0,-72.0,456.0)  pos=(153.0, -78.9, 463.0)  this=0x12E87760
+09:13:49 INFO  apply    #1 name='girl'  no config entry -> left on RNG pick
+09:13:49 INFO  spawn    #2  name='victim3'  count=2  spot=0  origin=(1359.0,105.0,6149.0)  pos=(1359.0, 82.1, 6149.0)  this=0x12E8DE28
+09:13:49 INFO  apply    #2 name='victim3'  no config entry -> left on RNG pick
+09:13:49 INFO  spawn    #3  name='boy2'  count=2  spot=0  origin=(308.0,-1018.0,3784.0)  pos=(308.0, -1064.9, 3784.0)  this=0x12E8A1A0
+09:13:49 INFO  apply    #3 name='boy2'  no config entry -> left on RNG pick
+09:13:49 INFO  spawn    #4  name='fatty'  count=1  spot=0  origin=(119.0,-115.0,6541.0)  pos=(119.0, -137.9, 6541.0)  this=0x12EF1960
+09:13:49 INFO  apply    #4 name='fatty'  no config entry -> left on RNG pick
+09:13:49 INFO  spawn    #5  name='fatman'  count=2  spot=1  origin=(551.0,-280.0,1632.0)  pos=(529.0, -302.9, 1507.0)  this=0x12EF0330
+09:13:49 INFO  apply    #5 name='fatman'  no config entry -> left on RNG pick
+09:13:49 INFO  spawn    #6  name='fatman1'  count=2  spot=0  origin=(451.0,-52.0,1344.0)  pos=(451.0, -70.9, 1344.0)  this=0x12EC1648
+09:13:49 INFO  apply    #6 name='fatman1'  no config entry -> left on RNG pick
+09:13:49 INFO  spawn    #7  name='fat'  count=2  spot=0  origin=(1056.0,-730.0,4532.0)  pos=(1056.0, -900.0, 4532.0)  this=0x12E7AF90
+09:13:49 INFO  apply    #7 name='fat'  no config entry -> left on RNG pick
+09:13:49 INFO  spawn    #8  name='girl'  count=1  spot=0  origin=(-12.0,-1042.0,4501.0)  pos=(-12.0, -1064.9, 4501.0)  this=0x12EE4748
+09:13:49 INFO  apply    #8 name='girl'  no config entry -> left on RNG pick
+09:13:53 INFO  level    map='city_h'  index=8  (0 victim entries in config)
+09:13:56 INFO  level    map='subway_a'  index=9  (0 victim entries in config)
+09:13:56 INFO  spawn    #0  name='Victim1'  count=3  spot=0  origin=(1180.0,-532.0,-1452.0)  pos=(1180.0, -575.2, -1452.0)  this=0x12EB70D8
+09:13:56 INFO  apply    #0 name='Victim1'  no config entry -> left on RNG pick
+09:13:56 INFO  spawn    #1  name='Victim2'  count=1  spot=0  origin=(-1777.0,0.0,1549.0)  pos=(-1777.0, -106.9, 1549.0)  this=0x12F139F0
+09:13:56 INFO  apply    #1 name='Victim2'  no config entry -> left on RNG pick
+09:13:56 INFO  spawn    #2  name='Victim3'  count=1  spot=0  origin=(2100.0,-516.0,-864.0)  pos=(2100.0, -588.0, -864.0)  this=0x12E9EB20
+09:13:56 INFO  apply    #2 name='Victim3'  no config entry -> left on RNG pick
+09:13:56 INFO  spawn    #3  name='Victim4'  count=1  spot=0  origin=(2302.0,-441.0,105.0)  pos=(2302.0, -658.9, 105.0)  this=0x12EA3F88
+09:13:56 INFO  apply    #3 name='Victim4'  no config entry -> left on RNG pick
+09:13:56 INFO  spawn    #4  name='Victim5'  count=1  spot=0  origin=(-852.0,12.0,408.0)  pos=(-852.0, -106.9, 408.0)  this=0x12EFBEF8
+09:13:56 INFO  apply    #4 name='Victim5'  no config entry -> left on RNG pick
+09:13:56 INFO  spawn    #5  name='Victim7'  count=1  spot=0  origin=(2438.0,-412.0,-3175.0)  pos=(2438.0, -658.9, -3175.0)  this=0x12EEAFB0
+09:13:56 INFO  apply    #5 name='Victim7'  no config entry -> left on RNG pick
+09:14:01 INFO  level    map='oil_rig_a'  index=11  (0 victim entries in config)
+09:14:01 INFO  spawn    #0  name='<null>'  count=2  spot=0  origin=(-236.0,590.0,-262.0)  pos=(-236.0, 505.1, -262.0)  this=0x12F0FD48
+09:14:01 INFO  apply    #0 name='<null>'  no config entry -> left on RNG pick
+09:14:01 INFO  spawn    #1  name='<null>17'  count=2  spot=1  origin=(-228.0,590.0,-508.0)  pos=(-600.0, 549.1, -852.0)  this=0x12E87760
+09:14:01 INFO  apply    #1 name='<null>17'  no config entry -> left on RNG pick
+09:14:01 INFO  spawn    #2  name='<null>18'  count=3  spot=2  origin=(-742.0,608.0,-762.0)  pos=(-746.0, 569.6, -874.0)  this=0x12E8CAA8
+09:14:01 INFO  apply    #2 name='<null>18'  no config entry -> left on RNG pick
+09:18:00 ERROR stop     unhandled exception:
+Traceback (most recent call last):
+  File "C:\Users\Erc\AppData\Roaming\Python\Python311\site-packages\pymem\__init__.py", line 716, in read_uint
+    value = pymem.memory.read_uint(self.process_handle, address)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Erc\AppData\Roaming\Python\Python311\site-packages\pymem\memory.py", line 359, in read_uint
+    return read_ctype(handle, address, ctypes.c_uint())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Erc\AppData\Roaming\Python\Python311\site-packages\pymem\memory.py", line 148, in read_ctype
+    raise pymem.exception.WinAPIError(error_code)
+pymem.exception.WinAPIError: Windows api error, error_code: 299
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "g:\My Drive\Github\fdny_info\victim_spawning\fdny_spawns.py", line 332, in main
+    head = mem.u32(cave + RING_HEAD_O)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "g:\My Drive\Github\fdny_info\victim_spawning\fdny_spawns.py", line 183, in u32
+    def u32(self, a):   return self.pm.read_uint(a)
+                               ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Erc\AppData\Roaming\Python\Python311\site-packages\pymem\__init__.py", line 718, in read_uint
+    raise pymem.exception.MemoryReadError(address, struct.calcsize('I'), e.error_code)
+pymem.exception.MemoryReadError: Could not read memory at: 265945344, length: 4 - GetLastError: 299
+
+09:18:00 ERROR cleanup  FAILED to restore 0x0045D71E (Could not write memory at: 4577054, length: b'\x8b\x95\xd0\x00\x00\x00' - GetLastError: 5) -- game may crash on next victim spawn!
+09:18:00 INFO  cleanup  freed cave 0x0FDA0000
+09:18:00 INFO  done
+10:42:25 INFO  attach   opening FDNYFirefighter.exe ...
+10:42:25 ERROR attach   FAILED: Could not find process: FDNYFirefighter.exe
+10:42:25 ERROR          is the game running?  try an elevated terminal.
+10:42:55 INFO  attach   opening FDNYFirefighter.exe ...
+10:42:55 INFO  attach   pid=32460  module base=0x00400000
+10:42:55 INFO  probe    0x0045D71E ok  (8b95d0000000)
+10:42:55 INFO  cave     allocated 0x0FB50000  (1796 bytes: 256 code / ring head 0xFB50100 / 64 slots)
+10:42:55 INFO  cave     wrote 86 code bytes
+10:42:55 INFO  hook     0x0045D71E -> jmp 0x0FB50000   (patch e9dd286f0f90, 6 bytes displaced)
+10:42:55 INFO  run      MODE=apply  config=g:\My Drive\Github\fdny_info\victim_spawning\spawns.json  poll=40ms  stop_roam=True
+10:42:55 INFO  run      Ctrl+C to stop and restore the original bytes.
+10:42:55 ERROR could not read g:\My Drive\Github\fdny_info\victim_spawning\spawns.json: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0) -- treating as empty
+10:43:04 INFO  level    map='training'  index=0  (0 victim entries in config)
+10:43:05 INFO  spawn    #0  name='victim1'  count=3  spot=0  origin=(1104.0,-60.0,-4976.0)  pos=(1104.0, -230.9, -4976.0)  this=0x139520B8
+10:43:05 INFO  apply    #0 name='victim1'  no config entry -> left on RNG pick
+10:43:05 INFO  spawn    #1  name='victim2'  count=3  spot=0  origin=(1656.0,-120.0,-4968.0)  pos=(1656.0, -230.9, -4968.0)  this=0x13952558
+10:43:05 INFO  apply    #1 name='victim2'  no config entry -> left on RNG pick
+10:44:05 INFO  stop     Ctrl+C
+10:44:05 INFO  cleanup  restored original bytes at 0x0045D71E
+10:44:05 INFO  cleanup  freed cave 0x0FB50000
+10:44:05 INFO  done
+10:44:07 INFO  attach   opening FDNYFirefighter.exe ...
+10:44:07 INFO  attach   pid=32460  module base=0x00400000
+10:44:07 INFO  probe    0x0045D71E ok  (8b95d0000000)
+10:44:07 INFO  cave     allocated 0x00620000  (1796 bytes: 256 code / ring head 0x620100 / 64 slots)
+10:44:07 INFO  cave     wrote 86 code bytes
+10:44:07 INFO  hook     0x0045D71E -> jmp 0x00620000   (patch e9dd281c0090, 6 bytes displaced)
+10:44:07 INFO  run      MODE=apply  config=g:\My Drive\Github\fdny_info\victim_spawning\spawns.json  poll=40ms  stop_roam=True
+10:44:07 INFO  run      Ctrl+C to stop and restore the original bytes.
+10:44:07 ERROR could not read g:\My Drive\Github\fdny_info\victim_spawning\spawns.json: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0) -- treating as empty
+10:44:07 INFO  level    map='training'  index=0  (0 victim entries in config)
+10:44:53 INFO  stop     Ctrl+C
+10:44:53 INFO  cleanup  restored original bytes at 0x0045D71E
+10:44:53 INFO  cleanup  freed cave 0x00620000
+10:44:53 INFO  done
+10:46:48 INFO  attach   opening FDNYFirefighter.exe ...
+10:46:48 INFO  attach   pid=32460  module base=0x00400000
+10:46:48 INFO  probe    0x0045D71E ok  (8b95d0000000)
+10:46:48 INFO  cave     allocated 0x02070000  (1796 bytes: 256 code / ring head 0x2070100 / 64 slots)
+10:46:48 INFO  cave     wrote 86 code bytes
+10:46:48 INFO  hook     0x0045D71E -> jmp 0x02070000   (patch e9dd28c10190, 6 bytes displaced)
+10:46:48 INFO  run      MODE=apply  config=g:\My Drive\Github\fdny_info\victim_spawning\spawns.json  poll=40ms  stop_roam=True
+10:46:48 INFO  run      Ctrl+C to stop and restore the original bytes.
+10:46:48 ERROR could not read g:\My Drive\Github\fdny_info\victim_spawning\spawns.json: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0) -- treating as empty
+10:46:48 INFO  level    map='training'  index=0  (0 victim entries in config)
+10:47:55 INFO  spawn    #0  name='victim1'  count=3  spot=2  origin=(1104.0,-60.0,-4976.0)  pos=(1472.0, -230.9, -4972.0)  this=0x1396C3D8
+10:47:55 INFO  apply    #0 name='victim1'  no config entry -> left on RNG pick
+10:47:55 INFO  spawn    #1  name='victim2'  count=3  spot=2  origin=(1656.0,-120.0,-4968.0)  pos=(1972.0, -230.9, -4960.0)  this=0x1396C7F8
+10:47:55 INFO  apply    #1 name='victim2'  no config entry -> left on RNG pick
+10:57:10 INFO  stop     Ctrl+C
+10:57:10 INFO  cleanup  restored original bytes at 0x0045D71E
+10:57:10 INFO  cleanup  freed cave 0x02070000
+10:57:10 INFO  done
+10:57:15 INFO  attach   opening FDNYFirefighter.exe ...
+10:57:15 INFO  attach   pid=32460  module base=0x00400000
+10:57:15 INFO  probe    0x0045D71E ok  (8b95d0000000)
+10:57:15 INFO  cave     allocated 0x00800000  (1796 bytes: 256 code / ring head 0x800100 / 64 slots)
+10:57:15 INFO  cave     wrote 86 code bytes
+10:57:15 INFO  hook     0x0045D71E -> jmp 0x00800000   (patch e9dd283a0090, 6 bytes displaced)
+10:57:15 INFO  run      MODE=apply  config=g:\My Drive\Github\fdny_info\victim_spawning\spawns.json  poll=40ms  stop_roam=True
+10:57:15 INFO  run      Ctrl+C to stop and restore the original bytes.
+10:57:16 INFO  level    map='training'  index=0  (2 victim entries in config)
+10:57:22 INFO  spawn    #0  name='victim1'  count=3  spot=2  origin=(1104.0,-60.0,-4976.0)  pos=(1472.0, -230.9, -4972.0)  this=0x13971958
+10:57:22 INFO  apply    #0 name='victim1'  spot 0 -> (1104.0, -60.0, -4976.0)   moved 405.8u  [+state=idle]
+10:57:22 INFO  spawn    #1  name='victim2'  count=3  spot=0  origin=(1656.0,-120.0,-4968.0)  pos=(1656.0, -230.9, -4968.0)  this=0x13956A10
+10:57:22 INFO  apply    #1 name='victim2'  RNG already picked spot 0 -> nothing to move
+10:58:12 INFO  spawn    #2  name='victim1'  count=3  spot=0  origin=(1104.0,-60.0,-4976.0)  pos=(1104.0, -230.9, -4976.0)  this=0x139887E0
+10:58:12 INFO  apply    #2 name='victim1'  no config entry -> left on RNG pick
+10:58:12 INFO  spawn    #3  name='victim2'  count=3  spot=2  origin=(1656.0,-120.0,-4968.0)  pos=(1972.0, -230.9, -4960.0)  this=0x13985440
+10:58:12 INFO  apply    #3 name='victim2'  no config entry -> left on RNG pick
+10:58:20 INFO  spawn    #4  name='victim1'  count=3  spot=2  origin=(1104.0,-60.0,-4976.0)  pos=(1472.0, -230.9, -4972.0)  this=0x139887E0
+10:58:20 INFO  apply    #4 name='victim1'  no config entry -> left on RNG pick
+10:58:20 INFO  spawn    #5  name='victim2'  count=3  spot=2  origin=(1656.0,-120.0,-4968.0)  pos=(1972.0, -230.9, -4960.0)  this=0x1395B0D8
+10:58:20 INFO  apply    #5 name='victim2'  no config entry -> left on RNG pick
+10:58:27 INFO  spawn    #6  name='victim1'  count=3  spot=1  origin=(1104.0,-60.0,-4976.0)  pos=(1300.0, -230.9, -4952.0)  this=0x139887E0
+10:58:27 INFO  apply    #6 name='victim1'  no config entry -> left on RNG pick
+10:58:27 INFO  spawn    #7  name='victim2'  count=3  spot=1  origin=(1656.0,-120.0,-4968.0)  pos=(1820.0, -230.9, -4960.0)  this=0x1396D460
+10:58:27 INFO  apply    #7 name='victim2'  no config entry -> left on RNG pick
+10:58:29 INFO  spawn    #8  name='victim1'  count=3  spot=0  origin=(1104.0,-60.0,-4976.0)  pos=(1104.0, -230.9, -4976.0)  this=0x1396E408
+10:58:29 INFO  apply    #8 name='victim1'  no config entry -> left on RNG pick
+10:58:29 INFO  spawn    #9  name='victim2'  count=3  spot=2  origin=(1656.0,-120.0,-4968.0)  pos=(1972.0, -230.9, -4960.0)  this=0x1396D460
+10:58:29 INFO  apply    #9 name='victim2'  no config entry -> left on RNG pick
+10:58:38 INFO  level    map='dock_h'  index=1  (0 victim entries in config)
+10:58:42 INFO  level    map='mbase'  index=2  (5 victim entries in config)
+10:58:43 INFO  spawn    #0  name='victim1'  count=1  spot=0  origin=(348.0,-136.0,-3068.0)  pos=(348.0, -210.9, -3068.0)  this=0x1395C6A8
+10:58:43 INFO  apply    #0 name='victim1'  RNG already picked spot 0 -> nothing to move
+10:58:43 INFO  spawn    #1  name='victim3'  count=1  spot=0  origin=(1796.0,-540.0,-3284.0)  pos=(1796.0, -594.9, -3284.0)  this=0x13949D58
+10:58:43 INFO  apply    #1 name='victim3'  RNG already picked spot 0 -> nothing to move
+10:58:43 INFO  spawn    #2  name='victim4'  count=1  spot=0  origin=(840.0,-260.0,-4812.0)  pos=(840.0, -338.9, -4812.0)  this=0x139474D0
+10:58:43 INFO  apply    #2 name='victim4'  RNG already picked spot 0 -> nothing to move
+10:58:43 INFO  spawn    #3  name='victim5'  count=1  spot=0  origin=(1852.0,-112.0,-5732.0)  pos=(1852.0, -210.9, -5732.0)  this=0x1396D418
+10:58:43 INFO  apply    #3 name='victim5'  RNG already picked spot 0 -> nothing to move
+10:58:43 INFO  spawn    #4  name='victim10'  count=1  spot=0  origin=(292.0,-320.0,-1320.0)  pos=(292.0, -410.9, -1320.0)  this=0x13955628
+10:58:43 INFO  apply    #4 name='victim10'  RNG already picked spot 0 -> nothing to move
+10:58:53 INFO  level    map='training'  index=0  (2 victim entries in config)
+10:58:53 INFO  spawn    #0  name='victim1'  count=3  spot=2  origin=(1104.0,-60.0,-4976.0)  pos=(1472.0, -230.9, -4972.0)  this=0x13942B98
+10:58:53 INFO  apply    #0 name='victim1'  spot 0 -> (1104.0, -60.0, -4976.0)   moved 405.8u  [+state=idle]
+10:58:53 INFO  spawn    #1  name='victim2'  count=3  spot=2  origin=(1656.0,-120.0,-4968.0)  pos=(1972.0, -230.9, -4960.0)  this=0x1396E408
+10:58:53 INFO  apply    #1 name='victim2'  spot 0 -> (1656.0, -120.0, -4968.0)   moved 335.0u  [+state=idle]
+10:59:44 INFO  spawn    #2  name='victim1'  count=3  spot=0  origin=(1104.0,-60.0,-4976.0)  pos=(1104.0, -230.9, -4976.0)  this=0x1396E408
+10:59:44 INFO  apply    #2 name='victim1'  no config entry -> left on RNG pick
+10:59:44 INFO  spawn    #3  name='victim2'  count=3  spot=0  origin=(1656.0,-120.0,-4968.0)  pos=(1656.0, -230.9, -4968.0)  this=0x13942B98
+10:59:44 INFO  apply    #3 name='victim2'  no config entry -> left on RNG pick
+11:00:07 INFO  spawn    #4  name='victim1'  count=3  spot=1  origin=(1104.0,-60.0,-4976.0)  pos=(1300.0, -230.9, -4952.0)  this=0x13942B98
+11:00:07 INFO  apply    #4 name='victim1'  no config entry -> left on RNG pick
+11:00:07 INFO  spawn    #5  name='victim2'  count=3  spot=2  origin=(1656.0,-120.0,-4968.0)  pos=(1972.0, -230.9, -4960.0)  this=0x1396E408
+11:00:07 INFO  apply    #5 name='victim2'  no config entry -> left on RNG pick
+11:12:38 INFO  attach   opening FDNYFirefighter.exe ...
+11:12:38 INFO  attach   pid=32460  module base=0x00400000
+11:12:38 INFO  probe    0x0045D71E ok  (8b95d0000000)
+11:12:38 INFO  cave     allocated 0x00800000  (1796 bytes: 256 code / ring head 0x800100 / 64 slots)
+11:12:38 INFO  cave     wrote 86 code bytes
+11:12:38 INFO  hook     0x0045D71E -> jmp 0x00800000   (patch e9dd283a0090, 6 bytes displaced)
+11:12:38 INFO  run      MODE=apply  config=g:\My Drive\Github\fdny_info\victim_spawning\spawns.json  poll=40ms  stop_roam=True
+11:12:38 INFO  run      Ctrl+C to stop and restore the original bytes.
+11:12:38 INFO  level    map='training'  index=0  (2 victim entries in config)
+11:13:13 INFO  spawn    #0  name='victim1'  count=3  spot=0  origin=(1104.0,-60.0,-4976.0)  pos=(1104.0, -230.9, -4976.0)  this=0x1396E408
+11:13:13 INFO  apply    #0 name='victim1'  RNG already picked spot 0 -> nothing to move
+11:13:13 INFO  spawn    #1  name='victim2'  count=3  spot=0  origin=(1656.0,-120.0,-4968.0)  pos=(1656.0, -230.9, -4968.0)  this=0x13942B98
+11:13:13 INFO  apply    #1 name='victim2'  RNG already picked spot 0 -> nothing to move
+11:13:16 INFO  level    reload detected (3s gap) -- victim ordinal reset to 0
+11:13:16 INFO  spawn    #0  name='victim1'  count=3  spot=1  origin=(1104.0,-60.0,-4976.0)  pos=(1300.0, -230.9, -4952.0)  this=0x13942B98
+11:13:16 INFO  apply    #0 name='victim1'  spot 0 -> (1104.0, -60.0, -4976.0)   moved 261.1u  [+state=idle]
+11:13:16 INFO  spawn    #1  name='victim2'  count=3  spot=0  origin=(1656.0,-120.0,-4968.0)  pos=(1656.0, -230.9, -4968.0)  this=0x1396E408
+11:13:16 INFO  apply    #1 name='victim2'  RNG already picked spot 0 -> nothing to move
+11:13:19 INFO  level    reload detected (3s gap) -- victim ordinal reset to 0
+11:13:19 INFO  spawn    #0  name='victim1'  count=3  spot=2  origin=(1104.0,-60.0,-4976.0)  pos=(1472.0, -230.9, -4972.0)  this=0x1396E408
+11:13:19 INFO  apply    #0 name='victim1'  spot 0 -> (1104.0, -60.0, -4976.0)   moved 405.8u  [+state=idle]
+11:13:19 INFO  spawn    #1  name='victim2'  count=3  spot=0  origin=(1656.0,-120.0,-4968.0)  pos=(1656.0, -230.9, -4968.0)  this=0x13942B98
+11:13:19 INFO  apply    #1 name='victim2'  RNG already picked spot 0 -> nothing to move
+11:13:22 INFO  level    reload detected (3s gap) -- victim ordinal reset to 0
+11:13:22 INFO  spawn    #0  name='victim1'  count=3  spot=1  origin=(1104.0,-60.0,-4976.0)  pos=(1300.0, -230.9, -4952.0)  this=0x13942B98
+11:13:22 INFO  apply    #0 name='victim1'  spot 0 -> (1104.0, -60.0, -4976.0)   moved 261.1u  [+state=idle]
+11:13:22 INFO  spawn    #1  name='victim2'  count=3  spot=1  origin=(1656.0,-120.0,-4968.0)  pos=(1820.0, -230.9, -4960.0)  this=0x1396E408
+11:13:22 INFO  apply    #1 name='victim2'  spot 0 -> (1656.0, -120.0, -4968.0)   moved 198.1u  [+state=idle]
+11:13:41 INFO  level    reload detected (19s gap) -- victim ordinal reset to 0
+11:13:41 INFO  spawn    #0  name='victim1'  count=3  spot=0  origin=(1104.0,-60.0,-4976.0)  pos=(1104.0, -230.9, -4976.0)  this=0x1396E408
+11:13:41 INFO  apply    #0 name='victim1'  RNG already picked spot 0 -> nothing to move
+11:13:41 INFO  spawn    #1  name='victim2'  count=3  spot=2  origin=(1656.0,-120.0,-4968.0)  pos=(1972.0, -230.9, -4960.0)  this=0x13942B98
+11:13:41 INFO  apply    #1 name='victim2'  spot 0 -> (1656.0, -120.0, -4968.0)   moved 335.0u  [+state=idle]
+12:54:29 INFO  level    reload detected (6048s gap) -- victim ordinal reset to 0
+12:54:29 INFO  spawn    #0  name='victim1'  count=3  spot=0  origin=(1104.0,-60.0,-4976.0)  pos=(1104.0, -230.9, -4976.0)  this=0x13942B98
+12:54:29 INFO  apply    #0 name='victim1'  RNG already picked spot 0 -> nothing to move
+12:54:29 INFO  spawn    #1  name='victim2'  count=3  spot=1  origin=(1656.0,-120.0,-4968.0)  pos=(1820.0, -230.9, -4960.0)  this=0x1396E408
+12:54:29 INFO  apply    #1 name='victim2'  spot 0 -> (1656.0, -120.0, -4968.0)   moved 198.1u  [+state=idle]
+12:54:56 INFO  stop     Ctrl+C
+12:54:56 INFO  cleanup  restored original bytes at 0x0045D71E
+12:54:56 INFO  cleanup  freed cave 0x00800000
+12:54:56 INFO  done
+12:54:58 INFO  attach   opening FDNYFirefighter.exe ...
+12:54:58 INFO  attach   pid=32460  module base=0x00400000
+12:54:58 INFO  probe    0x0045D717 ok  (8bcde8e2020400)
+12:54:58 INFO  cave     allocated 0x00800000  (2440 bytes: 320 code / ctr 0x800140 / table 0x800144 / ring 0x800188 x 64)
+12:54:58 INFO  cave     wrote 161 code bytes
+12:54:58 INFO  hook     0x0045D717 -> jmp 0x00800000   (patch e9e4283a009090, 7 bytes displaced)
+12:54:58 INFO  run      MODE=apply  config=g:\My Drive\Github\fdny_info\victim_spawning\spawns.json  poll=40ms  stop_roam=True
+12:54:58 INFO  run      the cave relocates victims IN-PLACE before the game's own SnapToFloor;
+12:54:58 INFO  run      Ctrl+C to stop and restore the original bytes.
+12:54:58 INFO  level    map='training'  index=0  (0 victim entries in config)
+12:54:58 INFO  table    map='training'  pinned: #0->spot0, #1->spot0
+12:55:05 INFO  spawn    ord=0  'victim1' (man)  count=3  -> FORCED spot 0  (game floor-snaps it)  this=0x1396E408
+12:55:05 INFO  spawn    ord=1  'victim2' (man)  count=3  -> FORCED spot 0  (game floor-snaps it)  this=0x13942B98
+12:55:05 INFO  settled  ord=0 'victim1' spot 0  -> (1104.0, -230.9, -4976.0)
+12:55:05 INFO  settled  ord=1 'victim2' spot 0  -> (1656.0, -230.9, -4968.0)
+12:56:22 INFO  spawn    ord=0  'victim1' (man)  count=3  -> FORCED spot 0  (game floor-snaps it)  this=0x13942B98
+12:56:22 INFO  spawn    ord=1  'victim2' (man)  count=3  -> FORCED spot 0  (game floor-snaps it)  this=0x1396E408
+12:56:23 INFO  settled  ord=0 'victim1' spot 0  -> (1104.0, -230.9, -4976.0)
+12:56:23 INFO  settled  ord=1 'victim2' spot 0  -> (1656.0, -230.9, -4968.0)
+12:56:34 INFO  stop     Ctrl+C
+12:56:34 INFO  cleanup  restored original bytes at 0x0045D717
+12:56:34 INFO  cleanup  freed cave 0x00800000
+12:56:34 INFO  done
+12:56:49 INFO  attach   opening FDNYFirefighter.exe ...
+12:56:49 INFO  attach   pid=32460  module base=0x00400000
+12:56:49 INFO  probe    0x0045D717 ok  (8bcde8e2020400)
+12:56:49 INFO  cave     allocated 0x00800000  (2440 bytes: 320 code / ctr 0x800140 / table 0x800144 / ring 0x800188 x 64)
+12:56:49 INFO  cave     wrote 161 code bytes
+12:56:49 INFO  hook     0x0045D717 -> jmp 0x00800000   (patch e9e4283a009090, 7 bytes displaced)
+12:56:49 INFO  run      MODE=apply  config=g:\My Drive\Github\fdny_info\victim_spawning\spawns.json  poll=40ms  stop_roam=True
+12:56:49 INFO  run      the cave relocates victims IN-PLACE before the game's own SnapToFloor;
+12:56:49 INFO  run      Ctrl+C to stop and restore the original bytes.
+12:56:49 INFO  level    map='training'  index=0  (2 victim entries in config)
+12:56:49 INFO  table    map='training'  pinned: #0->spot1, #1->spot1
+12:56:52 INFO  spawn    ord=0  'victim1' (man)  count=3  -> FORCED spot 1  (game floor-snaps it)  this=0x1396E408
+12:56:52 INFO  spawn    ord=1  'victim2' (man)  count=3  -> FORCED spot 1  (game floor-snaps it)  this=0x13942B98
+12:56:52 INFO  settled  ord=0 'victim1' spot 1  -> (1300.0, -230.9, -4952.0)
+12:56:52 INFO  settled  ord=1 'victim2' spot 1  -> (1820.0, -230.9, -4960.0)
+13:59:30 ERROR stop     unhandled exception:
+Traceback (most recent call last):
+  File "C:\Users\Erc\AppData\Roaming\Python\Python311\site-packages\pymem\__init__.py", line 716, in read_uint
+    value = pymem.memory.read_uint(self.process_handle, address)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Erc\AppData\Roaming\Python\Python311\site-packages\pymem\memory.py", line 359, in read_uint
+    return read_ctype(handle, address, ctypes.c_uint())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Erc\AppData\Roaming\Python\Python311\site-packages\pymem\memory.py", line 148, in read_ctype
+    raise pymem.exception.WinAPIError(error_code)
+pymem.exception.WinAPIError: Windows api error, error_code: 299
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "g:\My Drive\Github\fdny_info\victim_spawning\fdny_spawns.py", line 412, in main
+    head = mem.u32(cave + HEAD_O)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "g:\My Drive\Github\fdny_info\victim_spawning\fdny_spawns.py", line 241, in u32
+    def u32(self, a):   return self.pm.read_uint(a)
+                               ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Erc\AppData\Roaming\Python\Python311\site-packages\pymem\__init__.py", line 718, in read_uint
+    raise pymem.exception.MemoryReadError(address, struct.calcsize('I'), e.error_code)
+pymem.exception.MemoryReadError: Could not read memory at: 8388996, length: 4 - GetLastError: 299
+
+13:59:30 ERROR cleanup  FAILED to restore 0x0045D717 (Could not write memory at: 4577047, length: b'\x8b\xcd\xe8\xe2\x02\x04\x00' - GetLastError: 5) -- game may crash on next victim spawn!
+13:59:30 INFO  cleanup  freed cave 0x00800000
+13:59:30 INFO  done
