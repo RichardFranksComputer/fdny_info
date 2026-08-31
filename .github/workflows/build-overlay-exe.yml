@@ -2,9 +2,9 @@ name: Release Overlay Exe
 
 # Release model: publishing a GitHub Release builds the overlay and attaches
 # a ready-to-run "FDNY Overlay.zip" (containing an "FDNY Overlay" folder with
-# the exe/ini/icon together) to that release. workflow_dispatch is kept for
-# a manual test build, which uploads the same zip as a workflow artifact
-# instead (there's no release to attach it to).
+# the exe/ini/icon/values-*.py together) to that release. workflow_dispatch
+# is kept for a manual test build, which uploads the same zip as a workflow
+# artifact instead (there's no release to attach it to).
 on:
   release:
     types: [published]
@@ -38,6 +38,7 @@ jobs:
           Copy-Item -Path "dist\FDNY_Overlay.exe" -Destination $StageDir
           Copy-Item -Path "dist\overlay.ini" -Destination $StageDir
           Copy-Item -Path "dist\icon.ico" -Destination $StageDir
+          Copy-Item -Path "dist\values-*.py" -Destination $StageDir
 
           $ZipPath = Join-Path $env:RUNNER_TEMP "FDNY Overlay.zip"
           Compress-Archive -Path $StageDir -DestinationPath $ZipPath -Force

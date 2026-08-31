@@ -34,7 +34,7 @@ function Invoke-Native {
 
 $ScriptDir     = Split-Path -Parent $MyInvocation.MyCommand.Path
 $SourceFile    = Join-Path $ScriptDir "overlay.py"
-$ValuesFile    = Join-Path $ScriptDir "values.py"
+$EngineFile    = Join-Path $ScriptDir "watch_engine.py"
 $ProcReaderFile = Join-Path $ScriptDir "process_reader.py"
 $ConfigFile    = Join-Path $ScriptDir "overlay.ini"
 $IconFile      = Join-Path $ScriptDir "icon.ico"
@@ -43,8 +43,8 @@ $AppName       = "FDNY_Overlay"
 if (-not (Test-Path $SourceFile)) {
     throw "Could not find overlay.py at $SourceFile"
 }
-if (-not (Test-Path $ValuesFile)) {
-    throw "Could not find values.py at $ValuesFile"
+if (-not (Test-Path $EngineFile)) {
+    throw "Could not find watch_engine.py at $EngineFile"
 }
 if (-not (Test-Path $ProcReaderFile)) {
     throw "Could not find process_reader.py at $ProcReaderFile"
@@ -54,6 +54,11 @@ if (-not (Test-Path $ConfigFile)) {
 }
 if (-not (Test-Path $IconFile)) {
     throw "Could not find icon.ico at $IconFile"
+}
+
+$ValuesGameFiles = Get-ChildItem -Path $ScriptDir -Filter "values-*.py"
+if (-not $ValuesGameFiles) {
+    throw "Could not find any values-*.py file (e.g. values-fdny.py) in $ScriptDir"
 }
 
 # Ensure PyInstaller is installed. A non-zero exit here just means "not
@@ -76,9 +81,9 @@ $WindowModeArg = if ($Console) { "--console" } else { "--noconsole" }
 
 Push-Location $ScriptDir
 try {
-    # overlay.py's own imports (`from values import ...`, `from process_reader
-    # import ...`) are enough for PyInstaller to discover and bundle both
-    # modules automatically via static analysis - no --hidden-import or
+    # overlay.py's own imports (`from watch_engine import ...`, `from
+    # process_reader import ...`) are enough for PyInstaller to discover and
+    # bundle both modules automatically via static analysis - no --hidden-import or
     # --add-data needed for them, only for overlay.ini/icon.ico below, which
     # are read from disk at runtime rather than imported.
     Invoke-Native "PyInstaller build" {
@@ -93,15 +98,21 @@ try {
             $SourceFile
     }
 
-    # overlay.ini and icon.ico are read from next to the exe at runtime (not
-    # bundled inside the onefile package), so they must ship alongside it,
-    # not just in the repo. --icon above only sets the .exe file's own icon
-    # in Explorer; ICON_PATH in overlay.py is what sets the running window's
-    # taskbar/Alt-Tab icon, and needs the file on disk at runtime too.
+    # overlay.ini, icon.ico, and values-*.py are read from next to the exe at
+    # runtime (not bundled inside the onefile package), so they must ship
+    # alongside it, not just in the repo. --icon above only sets the .exe
+    # file's own icon in Explorer; ICON_PATH in overlay.py is what sets the
+    # running window's taskbar/Alt-Tab icon, and needs the file on disk at
+    # runtime too. values-*.py is loaded dynamically by path (not a normal
+    # import), so PyInstaller's static analysis can't discover it on its
+    # own - it needs the same explicit copy as the other two.
     Copy-Item -Path $ConfigFile -Destination "$ScriptDir\dist\overlay.ini" -Force
     Copy-Item -Path $IconFile -Destination "$ScriptDir\dist\icon.ico" -Force
+    foreach ($f in $ValuesGameFiles) {
+        Copy-Item -Path $f.FullName -Destination "$ScriptDir\dist\$($f.Name)" -Force
+    }
 
-    Write-Host "`nBuild complete: $ScriptDir\dist\$AppName.exe (+ overlay.ini, icon.ico)"
+    Write-Host "`nBuild complete: $ScriptDir\dist\$AppName.exe (+ overlay.ini, icon.ico, $($ValuesGameFiles.Name -join ', '))"
 }
 finally {
     Pop-Location

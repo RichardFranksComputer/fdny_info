@@ -1,4 +1,6 @@
-edit ur settings in config.ini ok 
+edit ur settings in overlay.ini ok 
+put ur custom values in values-$game.py ok
+look at values-fdny for example ok
 
 
 :)

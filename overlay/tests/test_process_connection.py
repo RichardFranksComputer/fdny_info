@@ -1,15 +1,6 @@
-"""
-Tests for ProcessConnection, the state machine in process_reader.py that handles:
-  - process not found (yet)
-  - process found but OpenProcess fails, retried up to max_open_attempts
-  - successful attach
-  - the attached process dying, and automatically re-searching afterward
-  - re-attaching after the process is relaunched
-
-These exercise ProcessConnection directly with injected fakes for the OS
-calls and the clock, so they run without Windows, a live game process, or a
-GUI.
-"""
+"""Tests for ProcessConnection (process_reader.py): not-found, retried
+open, attach, death+re-search, and re-attach after relaunch - all against
+injected OS/clock fakes, no Windows or live game needed."""
 
 import os
 import sys

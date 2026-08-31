@@ -1,16 +1,15 @@
+import configparser
 import ctypes
 import os
+import re
 import tkinter as tk
 import tkinter.font as tkfont
 
 from process_reader import ProcessConnection, PTR_SIZE
-from values import (
+from watch_engine import (
     WATCHES,
-    CONFIG_WARNINGS,
+    MODULE_WARNINGS,
     PROCESS_NAME,
-    REFRESH_MS,
-    FONT_SIZE,
-    TEXT_COLOR,
     WatchEngine,
     get_base_dir,
 )
@@ -18,15 +17,55 @@ from values import (
 ICON_PATH = os.path.join(get_base_dir(), "icon.ico")
 
 # =====================================================
+# CONFIG
+# =====================================================
+# Aesthetics only (watch_engine.py owns what's shown); overlay.ini is
+# assumed always present and complete, not defended against.
+
+CONFIG_PATH = os.path.join(get_base_dir(), "overlay.ini")
+
+def parse_hex_color(value):
+    """Validate a Tk '#rrggbb' hex color string."""
+    value = value.strip()
+    if not re.fullmatch(r"#[0-9a-fA-F]{6}", value):
+        raise ValueError(f"expected '#rrggbb', got {value!r}")
+    return value
+
+def load_config(path=CONFIG_PATH):
+    """Load [general] settings. parser.getint(section, option) is used, not
+    the section proxy's getint() - only the former raises on a missing key
+    instead of silently returning None."""
+    parser = configparser.ConfigParser()
+    parser.read(path)
+    section = "general"
+    return {
+        "refresh_ms": parser.getint(section, "refresh_ms"),
+        "text_color": parser.get(section, "text_color"),
+        "window_width": parser.getint(section, "window_width"),
+        "font_size": parser.getint(section, "font_size"),
+        "column_padding": parser.getint(section, "column_padding"),
+        "label_column_fraction": parser.getfloat(section, "label_column_fraction"),
+        "line_padding": parser.getint(section, "line_padding"),
+        "alpha": parser.getfloat(section, "alpha"),
+    }
+
+CONFIG_GENERAL = load_config()
+CONFIG_WARNINGS = list(MODULE_WARNINGS)  # game-module-load warnings, if any
+
+REFRESH_MS = CONFIG_GENERAL["refresh_ms"]
+FONT_SIZE = CONFIG_GENERAL["font_size"]
+WINDOW_WIDTH = CONFIG_GENERAL["window_width"]
+COLUMN_PADDING = CONFIG_GENERAL["column_padding"]
+LABEL_COLUMN_FRACTION = CONFIG_GENERAL["label_column_fraction"]
+LINE_PADDING = CONFIG_GENERAL["line_padding"]
+ALPHA = CONFIG_GENERAL["alpha"]
+TEXT_COLOR = parse_hex_color(CONFIG_GENERAL["text_color"])
+
+# =====================================================
 # LAYOUT
 # =====================================================
 
-WINDOW_WIDTH = 300
-COLUMN_PADDING = 5
-LABEL_COLUMN_FRACTION = 0.73  # rest goes to the value column
 STATUS_LINES = 2  # room for the two-line "process X\nnot found" messages
-LINE_PADDING = 6  # extra breathing room per row beyond the raw font metrics
-ALPHA = 0.55  # whole-window blend, used by both the Tk and Win32 layers
 
 # Root-window background color, never used by any real widget (every
 # label/frame/button is explicitly bg="black") - see _apply_transparency.
@@ -54,7 +93,6 @@ class Overlay(tk.Tk):
         self._placeholders_shown = False  # values currently blanked to "--"
 
         self.title("Uncle Rick's Overlay")  # taskbar tooltip / Alt-Tab preview text
-        self._set_icon()
         self.attributes("-topmost", True)
         self.attributes("-alpha", ALPHA)  # also sets WS_EX_LAYERED, needed by _apply_transparency
         self.configure(bg=TRANSPARENT_KEY)
@@ -81,6 +119,7 @@ class Overlay(tk.Tk):
             self.hwnd = None
             print(f"Warning: Could not get window handle: {e}")
         self._apply_transparency()
+        self._set_icon()
 
         self.protocol("WM_DELETE_WINDOW", self.on_close)
 
@@ -111,10 +150,8 @@ class Overlay(tk.Tk):
             value_lbl.grid(row=row, column=1, sticky="w", padx=(0, COLUMN_PADDING))
             self.value_labels.append(value_lbl)
 
-        # Built last so Tk's default stacking (newest sibling on top)
-        # already puts it above status_label/watches_frame with no extra
-        # lift() needed here - _set_status still needs one of its own,
-        # since re-packing status_label later restacks it back on top.
+        # Built last so Tk's default stacking (newest on top) already puts
+        # it above status_label/watches_frame - no lift() needed here.
         self._build_buttons()
 
         self.engine = WatchEngine()
@@ -128,10 +165,9 @@ class Overlay(tk.Tk):
         self.destroy()
 
     def _build_buttons(self):
-        """Minimize/close buttons, top-right corner. Real children of self:
-        place() keeps them pinned there across every resize automatically.
-        Always clickable since they're opaque, never TRANSPARENT_KEY -
-        see _apply_transparency."""
+        """Minimize/close buttons, top-right corner, real children of self
+        (place() keeps them pinned there). Always clickable: opaque, never
+        TRANSPARENT_KEY - see _apply_transparency."""
         size = self._font.metrics("linespace")
         self.button_frame = tk.Frame(self, bg="black")
         self.close_btn = self._make_square_button(self.button_frame, "x", self.on_close, size)
@@ -172,11 +208,9 @@ class Overlay(tk.Tk):
         self.geometry(f"+{event.x_root - dx}+{event.y_root - dy}")
 
     def _apply_transparency(self):
-        """Per-pixel click-through: SetLayeredWindowAttributes with
-        LWA_COLORKEY|LWA_ALPHA makes TRANSPARENT_KEY pixels invisible and
-        click-through, while every real widget (never that color) stays
-        opaque, alpha-blended, and always clickable - no per-widget
-        click-through toggle needed."""
+        """Per-pixel click-through via SetLayeredWindowAttributes:
+        TRANSPARENT_KEY pixels are invisible/click-through, every real
+        widget (never that color) stays opaque and clickable."""
         if not self.hwnd:
             return
         LWA_COLORKEY, LWA_ALPHA = 0x1, 0x2
@@ -188,14 +222,28 @@ class Overlay(tk.Tk):
             print(f"Warning: Could not set layered window attributes: {e}")
 
     def _set_icon(self):
-        """Taskbar/Alt-Tab/title-bar icon, from icon.ico next to the script
-        or exe (see ICON_PATH). Missing file degrades to Tk's default
-        feather icon rather than crashing. Must use default= here - plain
-        iconbitmap(path) only sets Tk's own title-bar icon on Windows, not
-        the underlying Win32 class icon the taskbar actually reads."""
+        """Not Tk's iconbitmap(): it ignores the process's real DPI scale,
+        so a 150%+ display still gets a stretched 32px icon. LoadImage with
+        a DPI-scaled target size picks the matching .ico frame instead."""
+        if not self.hwnd or not os.path.exists(ICON_PATH):
+            return
         try:
-            self.iconbitmap(default=ICON_PATH)
-        except tk.TclError as e:
+            IMAGE_ICON, LR_LOADFROMFILE = 1, 0x10
+            SM_CXICON, SM_CXSMICON = 11, 49
+            user32 = ctypes.windll.user32
+            big_size = user32.GetSystemMetrics(SM_CXICON)
+            small_size = user32.GetSystemMetrics(SM_CXSMICON)
+            hicon_big = user32.LoadImageW(None, ICON_PATH, IMAGE_ICON, big_size, big_size, LR_LOADFROMFILE)
+            hicon_small = user32.LoadImageW(None, ICON_PATH, IMAGE_ICON, small_size, small_size, LR_LOADFROMFILE)
+
+            WM_SETICON, ICON_SMALL, ICON_BIG = 0x80, 0, 1
+            user32.SendMessageW(self.hwnd, WM_SETICON, ICON_SMALL, hicon_small)
+            user32.SendMessageW(self.hwnd, WM_SETICON, ICON_BIG, hicon_big)
+
+            GCLP_HICON, GCLP_HICONSM = -14, -34
+            user32.SetClassLongPtrW(self.hwnd, GCLP_HICONSM, hicon_small)
+            user32.SetClassLongPtrW(self.hwnd, GCLP_HICON, hicon_big)
+        except Exception as e:
             print(f"Warning: Could not set icon from {ICON_PATH}: {e}")
 
     def _force_taskbar_icon(self):
@@ -281,11 +329,8 @@ class Overlay(tk.Tk):
 
 if __name__ == "__main__":
     print(f"System pointer size: {PTR_SIZE} bytes")
-    # A non-DPI-aware process gets "DPI-virtualized" by Windows: it's asked
-    # for a 96-DPI-baseline icon/frame and the result is bitmap-stretched to
-    # fit the real (scaled) display, which is what reads as blur - happens
-    # regardless of how many sizes icon.ico embeds. Must be set before any
-    # window is created.
+    # A non-DPI-aware process gets DPI-virtualized icons/frames (blurry on
+    # scaled displays); must be set before any window is created.
     try:
         ctypes.windll.shcore.SetProcessDpiAwareness(2)  # PROCESS_PER_MONITOR_DPI_AWARE
     except Exception:
@@ -293,10 +338,8 @@ if __name__ == "__main__":
             ctypes.windll.user32.SetProcessDPIAware()  # Windows 7/8 fallback
         except Exception as e:
             print(f"Warning: Could not set DPI awareness: {e}")
-    # Without an explicit AppUserModelID, Windows identifies this taskbar
-    # button with its hosting python.exe and shows *that* icon, ignoring
-    # whatever this window's own icon is set to - must be called before the
-    # window/taskbar button exists.
+    # Without this, Windows shows the hosting python.exe's icon on the
+    # taskbar instead of ours. Must run before the window exists.
     try:
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("FDNYOverlay.Overlay")
     except Exception as e:

@@ -1,4 +1,5 @@
-"""Tests for parse_hex_color, used by the config-driven text_color setting."""
+"""Tests for parse_hex_color (overlay.py), used by the config-driven
+text_color setting."""
 
 import os
 import sys
@@ -6,7 +7,7 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from values import parse_hex_color
+from overlay import parse_hex_color
 
 
 class TestParseHexColor(unittest.TestCase):
