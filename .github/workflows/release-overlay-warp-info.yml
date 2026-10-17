@@ -1,0 +1,54 @@
+name: Release Warp Info Overlay
+
+# Every push to main that touches overlay-warp-info/ builds the collision
+# overlay and publishes a release tagged "warp-info-build-<run number>".
+# --latest=false keeps these auto builds from taking the repo's "Latest"
+# badge away from the hand-published player-info releases.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "overlay-warp-info/**"
+      - ".github/workflows/release-overlay-warp-info.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: overlay-warp-info
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: python -m pip install pyinstaller pymem
+
+      - name: Build exe
+        run: pyinstaller --noconfirm --clean --onefile --windowed --name fdny_collision_overlay fdny_collision_overlay.py
+
+      - name: Package
+        shell: pwsh
+        run: |
+          Copy-Item dgVoodoo.conf dist/
+          Compress-Archive -Path dist/fdny_collision_overlay.exe, dist/dgVoodoo.conf -DestinationPath fdny_collision_overlay.zip
+
+      - name: Create release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = "warp-info-build-${{ github.run_number }}"
+          gh release create $tag `
+            fdny_collision_overlay.zip dist/fdny_collision_overlay.exe dist/dgVoodoo.conf `
+            --target ${{ github.sha }} `
+            --title "Warp Info Overlay - Build ${{ github.run_number }}" `
+            --notes "Automated build of ${{ github.sha }}." `
+            --latest=false
