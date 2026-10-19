@@ -1,22 +1,22 @@
 name: Release Warp Info Overlay
 
-# Every push to main that touches overlay-warp-info/ builds the collision
-# overlay and publishes a release tagged "warp-info-build-<run number>".
-# --latest=false keeps these auto builds from taking the repo's "Latest"
-# badge away from the hand-published player-info releases.
+# Release model: publishing a GitHub Release whose tag starts with
+# "warp-info-" (e.g. warp-info-v1.2.0) builds the collision overlay and
+# attaches the zip/exe/conf to that release. Releases with any other tag
+# prefix (e.g. player-info-*) are ignored. workflow_dispatch is kept for a
+# manual test build, which uploads the zip as a workflow artifact instead
+# (there's no release to attach it to).
 on:
-  push:
-    branches: [main]
-    paths:
-      - "overlay-warp-info/**"
-      - ".github/workflows/release-overlay-warp-info.yml"
-  workflow_dispatch:
+  release:
+    types: [published]
+  workflow_dispatch: {}
 
 permissions:
-  contents: write
+  contents: write # needed to upload assets to the release
 
 jobs:
   build:
+    if: github.event_name != 'release' || startsWith(github.event.release.tag_name, 'warp-info-')
     runs-on: windows-latest
     defaults:
       run:
@@ -40,15 +40,17 @@ jobs:
           Copy-Item dgVoodoo.conf dist/
           Compress-Archive -Path dist/fdny_collision_overlay.exe, dist/dgVoodoo.conf -DestinationPath fdny_collision_overlay.zip
 
-      - name: Create release
+      - name: Upload assets to the release
+        if: github.event_name == 'release'
         shell: pwsh
         env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          $tag = "warp-info-build-${{ github.run_number }}"
-          gh release create $tag `
-            fdny_collision_overlay.zip dist/fdny_collision_overlay.exe dist/dgVoodoo.conf `
-            --target ${{ github.sha }} `
-            --title "Warp Info Overlay - Build ${{ github.run_number }}" `
-            --notes "Automated build of ${{ github.sha }}." `
-            --latest=false
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ github.event.release.tag_name }}" fdny_collision_overlay.zip dist/fdny_collision_overlay.exe dist/dgVoodoo.conf --clobber
+
+      - name: Upload zip as a workflow artifact (manual test runs only)
+        if: github.event_name != 'release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Warp Info Overlay
+          path: overlay-warp-info/fdny_collision_overlay.zip
+          if-no-files-found: error
