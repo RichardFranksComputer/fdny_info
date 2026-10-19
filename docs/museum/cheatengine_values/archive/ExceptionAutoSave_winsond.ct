@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="46">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>0</ID>
+      <Description>"RescueWin Sound Object Address"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>07D970B0</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1</ID>
+      <Description>"RescueWin Sound Name (String)"</Description>
+      <VariableType>String</VariableType>
+      <Length>20</Length>
+      <Unicode>0</Unicode>
+      <CodePage>0</CodePage>
+      <ZeroTerminate>1</ZeroTerminate>
+      <Address>07D970BC</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>2</ID>
+      <Description>"Current Sound Playing Check"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>FDNYFirefighter.exe+A00F2</Address>
+      <Offsets>
+        <Offset>0</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>3</ID>
+      <Description>"No description"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>FDNYFirefighter.exe+34AB0</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>4</ID>
+      <Description>"Win Sound Played (0=No, 1=Yes)"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>WinSoundPlayed</Address>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+  <LuaScript>
+[ENABLE]
+local fmodPlayAddr = getAddress("FDNYFirefighter.exe+A00F0")
+local winSoundFlag = allocateMemory(4)
+
+registerSymbol("WinSoundPlayed", winSoundFlag, true)
+writeInteger(winSoundFlag, 0)
+
+debug_setBreakpoint(fmodPlayAddr, function()
+  local soundObjPtr = EAX  -- Sound object in EAX
+
+  if soundObjPtr ~= 0 then
+    -- Read pointer to sound name (offset +0x0C or nearby)
+    local namePtr = readInteger(soundObjPtr + 0x0C)
+    if namePtr ~= 0 then
+      local soundName = readString(namePtr, 20)
+      print("Playing sound: " .. soundName)
+
+      -- Check if it's a win sound
+      if string.find(soundName, "Win") then
+        print("*** WIN SOUND DETECTED! ***")
+        writeInteger(winSoundFlag, 1)
+      end
+    end
+  end
+
+  return 0  -- Continue execution
+end)
+
+print("Monitoring for win sounds...")
+
+[DISABLE]
+local fmodPlayAddr = getAddress("FDNYFirefighter.exe+A00F0")
+debug_removeBreakpoint(fmodPlayAddr)
+unregisterSymbol("WinSoundPlayed")
+print("Stopped monitoring")
+
+</LuaScript>
+</CheatTable>

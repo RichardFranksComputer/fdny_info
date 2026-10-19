@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable>
+  <CheatEntries>
+    <CheatEntry>
+      <ID>0</ID>
+      <Description>"=== GAME MANAGER ==="</Description>
+      <GroupHeader>1</GroupHeader>
+    </CheatEntry>
+    
+    <CheatEntry>
+      <ID>1</ID>
+      <Description>"Game Manager Pointer"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>FDNYFirefighter.exe+102AAC</Address>
+    </CheatEntry>
+    
+    <CheatEntry>
+      <ID>2</ID>
+      <Description>"Game State (2 = Level Complete - FAST)"</Description>
+      <ShowAsHex>0</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>FDNYFirefighter.exe+102AAC</Address>
+      <Offsets>
+        <Offset>10</Offset>
+      </Offsets>
+    </CheatEntry>
+    
+    <CheatEntry>
+      <ID>3</ID>
+      <Description>"Current Game Time (Global)"</Description>
+      <ShowAsHex>0</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>FDNYFirefighter.exe+102AFC</Address>
+    </CheatEntry>
+    
+    <CheatEntry>
+      <ID>10</ID>
+      <Description>"=== LEVEL OBJECT ==="</Description>
+      <GroupHeader>1</GroupHeader>
+    </CheatEntry>
+    
+    <CheatEntry>
+      <ID>11</ID>
+      <Description>"Level Object Pointer"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>FDNYFirefighter.exe+102AAC</Address>
+      <Offsets>
+        <Offset>6E4</Offset>
+      </Offsets>
+    </CheatEntry>
+    
+    <CheatEntry>
+      <ID>12</ID>
+      <Description>"Difficulty Level"</Description>
+      <ShowAsHex>0</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>FDNYFirefighter.exe+102AAC</Address>
+      <Offsets>
+        <Offset>18C</Offset>
+        <Offset>6E4</Offset>
+      </Offsets>
+    </CheatEntry>
+    
+    <CheatEntry>
+      <ID>13</ID>
+      <Description>"Last Rescued Victim (Non-0 = Rescued)"</Description>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>FDNYFirefighter.exe+102AAC</Address>
+      <Offsets>
+        <Offset>3534</Offset>
+        <Offset>6E4</Offset>
+      </Offsets>
+    </CheatEntry>
+    
+    <CheatEntry>
+      <ID>14</ID>
+      <Description>"*** Completion Timestamp (Non-0 = Complete - PERSISTENT) ***"</Description>
+      <ShowAsHex>0</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>FDNYFirefighter.exe+102AAC</Address>
+      <Offsets>
+        <Offset>5C4</Offset>
+        <Offset>6E4</Offset>
+      </Offsets>
+    </CheatEntry>
+    
+    <CheatEntry>
+      <ID>20</ID>
+      <Description>"=== INFO ==="</Description>
+      <GroupHeader>1</GroupHeader>
+    </CheatEntry>
+    
+    <CheatEntry>
+      <ID>21</ID>
+      <Description>"For LiveSplit: Use 'Completion Timestamp'"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>00000000</Address>
+    </CheatEntry>
+    
+    <CheatEntry>
+      <ID>22</ID>
+      <Description>"Split when: current > 0 AND old == 0"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>00000000</Address>
+    </CheatEntry>
+    
+  </CheatEntries>
+</CheatTable>

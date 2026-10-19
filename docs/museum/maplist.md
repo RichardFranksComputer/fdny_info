@@ -1,0 +1,19 @@
+# Map List
+
+List of all maps available in FDNY:
+
+```
+bank
+bar_r
+boat_a
+boat_b
+gas_r
+mbase
+oil_rig_a
+oil_rig_b
+oil_rig_c
+oil_rig_d
+subway_a
+subway_b
+training
+```

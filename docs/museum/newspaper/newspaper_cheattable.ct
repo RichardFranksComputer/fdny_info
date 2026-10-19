@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable>
+  <CheatEntries>
+    <CheatEntry>
+      <ID>1</ID>
+      <Description>g_VideoPlayerActive</Description>
+      <Address>0x005030C4</Address>
+      <Type>Byte</Type>
+      <UnicodeValue></UnicodeValue>
+      <ShowAsHex>0</ShowAsHex>
+      <ByteArray></ByteArray>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>2</ID>
+      <Description>g_VideoPlayer_GraphBuilder</Description>
+      <Address>0x005030C8</Address>
+      <Type>4 Bytes</Type>
+      <ShowAsHex>1</ShowAsHex>
+      <ByteArray></ByteArray>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>3</ID>
+      <Description>g_VideoPlayer_MediaControl</Description>
+      <Address>0x005030CC</Address>
+      <Type>4 Bytes</Type>
+      <ShowAsHex>1</ShowAsHex>
+      <ByteArray></ByteArray>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>4</ID>
+      <Description>g_VideoPlayer_VideoWindow</Description>
+      <Address>0x005030D0</Address>
+      <Type>4 Bytes</Type>
+      <ShowAsHex>1</ShowAsHex>
+      <ByteArray></ByteArray>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>5</ID>
+      <Description>g_VideoPlayer_BasicVideo</Description>
+      <Address>0x005030D4</Address>
+      <Type>4 Bytes</Type>
+      <ShowAsHex>1</ShowAsHex>
+      <ByteArray></ByteArray>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>6</ID>
+      <Description>g_VideoPlayer_WindowHandle</Description>
+      <Address>0x005030D8</Address>
+      <Type>4 Bytes</Type>
+      <ShowAsHex>1</ShowAsHex>
+      <ByteArray></ByteArray>
+    </CheatEntry>
+  </CheatEntries>
+</CheatTable>
