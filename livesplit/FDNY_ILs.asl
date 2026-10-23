@@ -1,26 +1,47 @@
 /*
  * ==============================================================================
- * FDNY FIREFIGHTER - IL AUTO SPLITTER (ALL RESCUE MAPS)
+ * FDNY FIREFIGHTER - IL AUTO SPLITTER (ALL RESCUE MAPS)            v2.1, 2026-10-23
  * ==============================================================================
- * Resets any time gameState is 0 (game in menu)
- * INTENDED FOR IL RUNS ONLY
+ * Resets any time gameState is 0 (game in menu). INTENDED FOR IL RUNS ONLY.
+ *
+ * How it detects things (verified live on the game, core/evidence/autosplitter/):
+ *
+ *  STAGE DONE (oil rig A/B/C, boat A, subway A): touching the stage exit runs the
+ *    script verb `finalexitloadmap <next>`, which stores the next map's name in the
+ *    game session (GameSession+0x660, "pendingMap") on that exact frame and keeps it
+ *    there. The load starts one frame later. The split fires when pendingMap changes
+ *    to the next stage of the map being played. 
+ *    Fallback: if pendingMap already held that name (a stage retried after an earlier
+ *    exit), the split fires when the in-game load starts (gameState 1 -> 2) with
+ *    pendingMap = next stage.
+ *
+ *  LEVEL WON (every map, including the last stage of boat / subway / oil rig): the
+ *    level's end sound starts (its slot goes 0 -> nonzero), the v1 method, unchanged.
+ *    Checked against the game's own win flag (PlayerRescueEnt+0x3438 0 -> 1): on every
+ *    level the sound follows the win by 0-2 game frames (0-32 ms on the VM), and on its
+ *    own map the slot stays 0 until the win. The slots do change during other levels,
+ *    so each is only read on its own map.
+ *
+ *  LOADS: gameState 2 = loading, 3 = level start; gameplay resumes at 3 -> 1. After a
+ *    win the timer stays paused until the next level is playing.
  * ==============================================================================
  */
 
 state("FDNYFirefighter")
 {
     int gameState : 0x00102AAC, 0x6F0;
-    string10 mapName : 0x00102AAC, 0x688, 0x0, 0xC;
+    string16 mapName : 0x00102AAC, 0x688, 0x0, 0xC;
+    string16 pendingMap : 0x00102AAC, 0x660, 0xC;     // next map of the last in-game level change
     int totalVictims : 0x00103A78, 0x30, 0x3528;
     int rescuedVictims : 0x00103A78, 0x30, 0x352C;
-    
+
     // Single-stage map completion sounds
     int bankLevelEndSoundPlayed : 0x00103A78, 0x8, 0x0, 0x158, 0x0;
     int barLevelEndSoundPlayed : 0x00103A78, 0x8, 0x0, 0xFC, 0x0;
     int gasStationLevelEndSoundPlayed : 0x00103A78, 0x8, 0x0, 0xF0, 0x0;
     int militaryBaseLevelEndSoundPlayed : 0x00103A78, 0x8, 0x0, 0xC8, 0x0;
     int trainingLevelEndSoundPlayed : 0x00103A78, 0x8, 0x0, 0x104, 0x0;
-    
+
     // Multi-stage final completion sounds
     int boatLevelEndSoundPlayed : 0x00103A78, 0x8, 0x0, 0xBC, 0x0;
     int oilRigDLevelEndSoundPlayed : 0x00103A78, 0x8, 0x0, 0xC4, 0x0;
@@ -29,214 +50,106 @@ state("FDNYFirefighter")
 
 startup
 {
-    print("[FDNY] ========================================");
-    print("[FDNY] Auto-splitter script loaded");
-    print("[FDNY] ========================================");
-    
-    vars.frameCount = 0;
-    vars.hasSplit = false;
-    vars.lastMap = "";
+    // the stage that follows each staged map (finalexitloadmap targets in the .bsp scripts)
+    vars.nextStage = new Dictionary<string, string> {
+        { "oil_rig_a", "oil_rig_b" }, { "oil_rig_b", "oil_rig_c" }, { "oil_rig_c", "oil_rig_d" },
+        { "boat_a", "boat_b" }, { "subway_a", "subway_b" },
+    };
+    vars.levelMap = "";       // the map being played (set when gameplay starts)
+    vars.inLevel = false;     // playing since the last 3 -> 1, no menu since
+    vars.stageSplit = false;  // this stage already split
+    vars.levelDone = false;   // won: paused until the next level is playing
+    print("[FDNY] IL auto splitter");
 }
 
 init
 {
-    print("[FDNY] Game process attached, initializing");
-    
-    vars.frameCount = 0;
-    vars.hasSplit = false;
-    vars.lastMap = "";
+    vars.levelMap = "";
+    vars.inLevel = false;
+    vars.stageSplit = false;
+    vars.levelDone = false;
 }
 
 update
 {
-    vars.frameCount++;
-    
-    vars.currentMap = current.mapName.ToLower().Trim();
+    vars.map = (current.mapName ?? "").ToLower().Trim();
+    vars.pending = (current.pendingMap ?? "").ToLower().Trim();
+    vars.oldPending = (old.pendingMap ?? "").ToLower().Trim();
 
-    // Heartbeat every 300 frames (~5 seconds)
-    if (vars.frameCount % 300 == 0)
+    // gameplay (re)starts: a level or stage finished loading
+    if (old.gameState == 3 && current.gameState == 1)
     {
-        print(String.Format("[FDNY] Frame:{0} | State:{1} | Map:'{2}' | Split:{3} | LastMap:'{4}'",
-            vars.frameCount,
-            current.gameState,
-            vars.currentMap,
-            vars.hasSplit,
-            vars.lastMap));
+        vars.levelMap = vars.map;
+        vars.inLevel = true;
+        vars.stageSplit = false;
+        vars.levelDone = false;
+        print(String.Format("[FDNY] playing '{0}'", vars.levelMap));
     }
-    
-    // Reset split flag when entering gameplay from menu (0→1)
-    if (old.gameState == 0 && current.gameState == 1)
-    {
-        print(String.Format("[FDNY] Menu→Gameplay | Map:'{0}' | RESET split flag", vars.currentMap));
-        vars.hasSplit = false;
-        vars.lastMap = vars.currentMap;
-    }
-    
-    // Reset split flag when map changes DURING gameplay (multi-stage direct transitions)
-    // This happens AFTER the split has been processed
-    if (current.gameState == 1 && vars.hasSplit && vars.lastMap != "" && vars.lastMap != vars.currentMap)
-    {
-        print(String.Format("[FDNY] Map transition completed '{0}'→'{1}' | RESET split flag, RESUME timer", 
-            vars.lastMap, vars.currentMap));
-        vars.hasSplit = false;
-        vars.lastMap = vars.currentMap;
-    }
+    if (current.gameState == 0)
+        vars.inLevel = false;
 }
 
 start
 {
-    // Start when in gameplay state
-    if (current.gameState == 1)
+    // the first gameplay frame of a level
+    if (old.gameState == 3 && current.gameState == 1)
     {
-        print(String.Format("[FDNY START] TIMER STARTED | Map:'{0}'", vars.currentMap));
-        
-        vars.hasSplit = false;
-        vars.lastMap = vars.currentMap;
-        vars.frameCount = 0;
-        
+        print(String.Format("[FDNY START] '{0}'", vars.map));
         return true;
     }
-    
     return false;
 }
 
 split
 {
-    // Only split during gameplay and if we haven't already split
-    if (current.gameState != 1 || vars.hasSplit)
-        return false;
-    
-    // ============================================================================
-    // MAP TRANSITION SPLITS (Multi-stage levels)
-    // Check FIRST - these happen before sound triggers
-    // Note: lastMap is NOT updated here - update block handles it after transition
-    // ============================================================================
-    
-    if (vars.lastMap.Contains("boat_a") && vars.currentMap.Contains("boat_b"))
+    string next;
+    bool staged = vars.nextStage.TryGetValue((string)vars.levelMap, out next);
+
+    // stage exit touched: pendingMap became the next stage
+    if (staged && !vars.stageSplit && vars.pending == next && vars.pending != vars.oldPending)
     {
-        print(String.Format("[FDNY SPLIT] Boat A→B | '{0}'→'{1}'", vars.lastMap, vars.currentMap));
-        vars.hasSplit = true;
+        print(String.Format("[FDNY SPLIT] stage '{0}' -> '{1}' (exit touched)", vars.levelMap, next));
+        vars.stageSplit = true;
         return true;
     }
-    
-    if (vars.lastMap.Contains("subway_a") && vars.currentMap.Contains("subway_b"))
+    // fallback: the in-game load of the next stage starts (pendingMap already held its name)
+    if (staged && !vars.stageSplit && vars.inLevel && old.gameState == 1 && current.gameState == 2 &&
+        vars.pending == next)
     {
-        print(String.Format("[FDNY SPLIT] Subway A→B | '{0}'→'{1}'", vars.lastMap, vars.currentMap));
-        vars.hasSplit = true;
+        print(String.Format("[FDNY SPLIT] stage '{0}' -> '{1}' (load start)", vars.levelMap, next));
+        vars.stageSplit = true;
         return true;
     }
-    
-    if (vars.lastMap.Contains("oil_rig_a") && vars.currentMap.Contains("oil_rig_b"))
+    // level won (every map): that map's end sound starts
+    string m = vars.levelMap;
+    bool won =
+        (m.Contains("training") && old.trainingLevelEndSoundPlayed == 0 && current.trainingLevelEndSoundPlayed != 0) ||
+        (m.Contains("bank") && old.bankLevelEndSoundPlayed == 0 && current.bankLevelEndSoundPlayed != 0) ||
+        (m.Contains("bar_r") && old.barLevelEndSoundPlayed == 0 && current.barLevelEndSoundPlayed != 0) ||
+        (m.Contains("gas_r") && old.gasStationLevelEndSoundPlayed == 0 && current.gasStationLevelEndSoundPlayed != 0) ||
+        (m.Contains("mbase") && old.militaryBaseLevelEndSoundPlayed == 0 && current.militaryBaseLevelEndSoundPlayed != 0) ||
+        (m.Contains("boat_b") && old.boatLevelEndSoundPlayed == 0 && current.boatLevelEndSoundPlayed != 0) ||
+        (m.Contains("subway_b") && old.subwayLevelEndSoundPlayed == 0 && current.subwayLevelEndSoundPlayed != 0) ||
+        (m.Contains("oil_rig_d") && old.oilRigDLevelEndSoundPlayed == 0 && current.oilRigDLevelEndSoundPlayed != 0);
+    if (current.gameState == 1 && vars.inLevel && !vars.levelDone && won)
     {
-        print(String.Format("[FDNY SPLIT] Oil Rig A→B | '{0}'→'{1}'", vars.lastMap, vars.currentMap));
-        vars.hasSplit = true;
+        print(String.Format("[FDNY SPLIT] '{0}' won", vars.levelMap));
+        vars.levelDone = true;
         return true;
     }
-    
-    if (vars.lastMap.Contains("oil_rig_b") && vars.currentMap.Contains("oil_rig_c"))
-    {
-        print(String.Format("[FDNY SPLIT] Oil Rig B→C | '{0}'→'{1}'", vars.lastMap, vars.currentMap));
-        vars.hasSplit = true;
-        return true;
-    }
-    
-    if (vars.lastMap.Contains("oil_rig_c") && vars.currentMap.Contains("oil_rig_d"))
-    {
-        print(String.Format("[FDNY SPLIT] Oil Rig C→D | '{0}'→'{1}'", vars.lastMap, vars.currentMap));
-        vars.hasSplit = true;
-        return true;
-    }
-    
-    // ============================================================================
-    // SINGLE-STAGE MAPS - Sound triggers
-    // Each map has a corresponding memory address to monitor for EndSoundPlayed condition
-    // ============================================================================
-    
-    if (vars.currentMap.Contains("training") && 
-        old.trainingLevelEndSoundPlayed == 0 && current.trainingLevelEndSoundPlayed != 0)
-    {
-        print("[FDNY SPLIT] Training completed");
-        vars.hasSplit = true;
-        return true;
-    }
-    
-    if (vars.currentMap.Contains("bank") && 
-        old.bankLevelEndSoundPlayed == 0 && current.bankLevelEndSoundPlayed != 0)
-    {
-        print("[FDNY SPLIT] Bank completed");
-        vars.hasSplit = true;
-        return true;
-    }
-    
-    if (vars.currentMap.Contains("bar_r") && 
-        old.barLevelEndSoundPlayed == 0 && current.barLevelEndSoundPlayed != 0)
-    {
-        print("[FDNY SPLIT] Bar completed");
-        vars.hasSplit = true;
-        return true;
-    }
-    
-    if (vars.currentMap.Contains("gas_r") && 
-        old.gasStationLevelEndSoundPlayed == 0 && current.gasStationLevelEndSoundPlayed != 0)
-    {
-        print("[FDNY SPLIT] Gas Station completed");
-        vars.hasSplit = true;
-        return true;
-    }
-    
-    if (vars.currentMap.Contains("mbase") && 
-        old.militaryBaseLevelEndSoundPlayed == 0 && current.militaryBaseLevelEndSoundPlayed != 0)
-    {
-        print("[FDNY SPLIT] Military Base completed");
-        vars.hasSplit = true;
-        return true;
-    }
-    
-    // ============================================================================
-    // MULTI-STAGE FINAL COMPLETIONS - Sound triggers
-    // Final stages of multi-stage levels will are split when their end sound plays
-    // ============================================================================
-    
-    if (vars.currentMap.Contains("boat_b") && 
-        old.boatLevelEndSoundPlayed == 0 && current.boatLevelEndSoundPlayed != 0)
-    {
-        print("[FDNY SPLIT] Boat B completed");
-        vars.hasSplit = true;
-        return true;
-    }
-    
-    if (vars.currentMap.Contains("subway_b") && 
-        old.subwayLevelEndSoundPlayed == 0 && current.subwayLevelEndSoundPlayed != 0)
-    {
-        print("[FDNY SPLIT] Subway B completed");
-        vars.hasSplit = true;
-        return true;
-    }
-    
-    if (vars.currentMap.Contains("oil_rig_d") && 
-        old.oilRigDLevelEndSoundPlayed == 0 && current.oilRigDLevelEndSoundPlayed != 0)
-    {
-        print("[FDNY SPLIT] Oil Rig D completed");
-        vars.hasSplit = true;
-        return true;
-    }
-    
     return false;
 }
 
 isLoading
 {
-    // hasSplit = true occurs after levelEndSoundPlayed (single stage levels)
-    // current.gamestate 2 occurs during loading (intermediary stages of multistage maps)
-    // current.gamestate 3 during victory 
-    return vars.hasSplit || current.gameState == 2 || current.gameState == 3;
+    return vars.levelDone || current.gameState == 2 || current.gameState == 3;
 }
 
 reset
 {
     if (current.gameState == 0)
     {
-        print("[FDNY RESET] ✓ Returned to menu");
+        print("[FDNY RESET] returned to menu");
         return true;
     }
     return false;
